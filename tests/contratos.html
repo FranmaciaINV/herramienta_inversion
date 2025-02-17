@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Contratos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #000; /* Fondo negro */
+            color: #fff; /* Texto blanco */
+        }
+        form {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: #333; /* Fondo gris oscuro */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #ff7300; /* Naranja */
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        input[type="text"] {
+            width: 200px;
+            padding: 10px;
+            margin-right: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #000; /* Fondo negro */
+            color: #fff; /* Texto blanco */
+        }
+        input[type="text"]::placeholder {
+            color: #bbb; /* Placeholder gris claro */
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff7300; /* Naranja */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e66400; /* Naranja más oscuro */
+        }
+        h1 {
+            text-align: center;
+            color: #ff7300; /* Naranja */
+        }
+    </style>
+</head>
+<body>
+    <h1>Generador de Contratos</h1>
+    <form method="POST" action="http://127.0.0.1:5000/generar-contrato">
+        <div class="form-group">
+            <label for="nombre_vendedor">Nombre del Vendedor</label>
+            <input type="text" id="nombre_vendedor" name="nombre_vendedor" placeholder="Introduce el nombre" required>
+        </div>
+        <div class="form-group">
+            <label for="nombre_comprador">Nombre del Comprador</label>
+            <input type="text" id="nombre_comprador" name="nombre_comprador" placeholder="Introduce el nombre" required>
+        </div>
+        <button type="submit">Generar Contrato</button>
+    </form>
+</body>
+</html>

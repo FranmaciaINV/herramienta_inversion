@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agente IA</title>
+</head>
+<body>
+    <h1>Agente Demográfico y Reformas</h1>
+    <section>
+        <h2>Consulta Demográfica</h2>
+        <input type="text" id="codigo-postal" placeholder="Código Postal">
+        <button onclick="consultarDemografia()">Consultar</button>
+        <div id="resultados-demografia"></div>
+    </section>
+
+    <section>
+        <h2>Consulta Reformas</h2>
+        <!-- Formulario de reformas -->
+    </section>
+
+    <script>
+        function consultarDemografia() {
+            const codigoPostal = document.getElementById("codigo-postal").value;
+
+            fetch("/consulta-demografica", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ codigo_postal: codigoPostal }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    document.getElementById("resultados-demografia").innerText = data.respuesta_clara || data.error;
+                })
+                .catch((err) => {
+                    console.error(err);
+                    document.getElementById("resultados-demografia").innerText = "Error en la consulta.";
+                });
+        }
+    </script>
+</body>
+</html>

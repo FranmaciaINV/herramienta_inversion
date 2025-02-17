@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agente de Servicios - Compañías</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #ff7300;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+        }
+
+        #tabs {
+            display: flex;
+            justify-content: center;
+            background-color: #000;
+            padding: 10px;
+        }
+
+        #tabs button {
+            background-color: #ff7300;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        #tabs button:hover {
+            background-color: #e66400;
+        }
+
+        #tabs button.active {
+            background-color: #333;
+        }
+
+        #contenidos {
+            padding: 20px;
+        }
+
+        .contenedor-companias {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .compania-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .compania-card h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #ff7300;
+        }
+
+        .compania-card p {
+            margin: 0 0 10px;
+        }
+
+        .error {
+            color: red;
+        }
+
+        #pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        #pagination button {
+            background-color: #ff7300;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        #pagination button.active {
+            background-color: #333;
+        }
+
+        #pagination button:hover {
+            background-color: #e66400;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Agente de Servicios - Compañías</h1>
+    </header>
+
+    <div id="tabs">
+        <button id="tab-luz" onclick="mostrarPestana('luz')">Compañías de Luz</button>
+        <button id="tab-gas" onclick="mostrarPestana('gas')">Compañías de Gas</button>
+        <button id="tab-luzygas" onclick="mostrarPestana('luzygas')">Compañías de Luz y Gas</button>
+    </div>
+
+    <div id="contenidos">
+        <div id="luz-container" class="contenedor-companias"></div>
+        <div id="gas-container" class="contenedor-companias" style="display:none;"></div>
+        <div id="luzygas-container" class="contenedor-companias" style="display:none;"></div>
+    </div>
+
+    <div id="pagination"></div>
+
+    <script>
+        const companiasPorPagina = 12; // Cantidad de compañías por página
+        let companiasActuales = []; // Almacenará las compañías cargadas para la pestaña activa
+        let paginaActual = 1; // Página actual
+
+        async function cargarCompanias(tipo) {
+            const container = document.getElementById(`${tipo}-container`);
+            try {
+                container.innerHTML = "<p>Cargando compañías...</p>";
+                const response = await fetch(`http://127.0.0.1:5001/obtener-companias?tipo=${tipo}`);
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.status}`);
+                }
+
+                const companias = await response.json();
+                if (companias.length > 0) {
+                    companiasActuales = companias; // Almacenar compañías cargadas
+                    paginaActual = 1; // Reiniciar a la primera página
+                    mostrarPagina(tipo);
+                } else {
+                    container.innerHTML = "<p>No hay compañías disponibles en este momento.</p>";
+                }
+            } catch (error) {
+                console.error("Error al cargar las compañías:", error);
+                container.innerHTML = `<p class="error">Error al cargar las compañías: ${error.message}</p>`;
+            }
+        }
+
+        function mostrarPagina(tipo) {
+            const container = document.getElementById(`${tipo}-container`);
+            const inicio = (paginaActual - 1) * companiasPorPagina;
+            const fin = inicio + companiasPorPagina;
+
+            const companiasPagina = companiasActuales.slice(inicio, fin);
+
+            container.innerHTML = ""; // Limpiar el contenedor
+
+            companiasPagina.forEach((compania) => {
+                const cardHTML = `
+                    <div class="compania-card">
+                        <h3>${compania.nombre}</h3>
+                        <p>${compania.descripcion}</p>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+
+            actualizarPaginacion(tipo);
+        }
+
+        function actualizarPaginacion(tipo) {
+            const totalPaginas = Math.ceil(companiasActuales.length / companiasPorPagina);
+            const pagination = document.getElementById("pagination");
+
+            pagination.innerHTML = ""; // Limpiar el contenedor de paginación
+
+            for (let i = 1; i <= totalPaginas; i++) {
+                const button = document.createElement("button");
+                button.textContent = i;
+                button.classList.toggle("active", i === paginaActual);
+                button.onclick = () => {
+                    paginaActual = i;
+                    mostrarPagina(tipo);
+                };
+                pagination.appendChild(button);
+            }
+        }
+
+        function mostrarPestana(tipo) {
+            const pestanas = ["luz", "gas", "luzygas"];
+            pestanas.forEach((pestana) => {
+                const container = document.getElementById(`${pestana}-container`);
+                const tabButton = document.getElementById(`tab-${pestana}`);
+                if (pestana === tipo) {
+                    container.style.display = "grid";
+                    tabButton.classList.add("active");
+                    cargarCompanias(tipo);
+                } else {
+                    container.style.display = "none";
+                    tabButton.classList.remove("active");
+                }
+            });
+        }
+
+        // Cargar por defecto la primera pestaña
+        mostrarPestana("luz");
+    </script>
+</body>
+</html>

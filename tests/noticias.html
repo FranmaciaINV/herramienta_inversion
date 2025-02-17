@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noticias Recientes del Mercado Inmobiliario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #ff7300;
+            color: #fff;
+            padding: 15px 20px;
+            text-align: center;
+        }
+
+        #noticias-container {
+            padding: 20px;
+        }
+
+        .noticia {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .noticia h2 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #ff7300;
+        }
+
+        .noticia p {
+            margin: 0 0 10px;
+        }
+
+        .noticia a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .noticia a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Noticias Recientes y Relevantes sobre el Mercado Inmobiliario en España</h1>
+    </header>
+    <main id="noticias-container">
+        <p>Cargando noticias...</p>
+    </main>
+
+    <script>
+        async function cargarNoticias() {
+            const container = document.getElementById("noticias-container");
+            try {
+                // Realizar la solicitud al backend
+                const response = await fetch("http://127.0.0.1:5000/obtener-noticias");
+                const noticias = await response.json();
+
+                // Verificar si hay noticias en la respuesta
+                if (noticias && Array.isArray(noticias) && noticias.length > 0) {
+                    container.innerHTML = ""; // Limpiar contenido previo
+
+                    // Recorrer y renderizar cada noticia
+                    noticias.forEach((noticia, index) => {
+                        const noticiaHTML = `
+                            <div class="noticia">
+                                <h2>${index + 1}. ${noticia.title || "Título no disponible"}</h2>
+                                <p>${noticia.description || "Descripción no disponible"}</p>
+                                <p><a href="${noticia.url || '#'}" target="_blank" rel="noopener noreferrer">Leer más</a></p>
+                            </div>
+                        `;
+                        container.innerHTML += noticiaHTML;
+                    });
+                } else {
+                    container.innerHTML = "<p>No hay noticias disponibles en este momento.</p>";
+                }
+            } catch (error) {
+                console.error("Error al cargar las noticias:", error);
+                container.innerHTML = `<p class="error">Error al cargar las noticias: ${error.message}</p>`;
+            }
+        }
+
+        // Llamar a la función para cargar noticias al iniciar
+        cargarNoticias();
+    </script>
+</body>
+</html>

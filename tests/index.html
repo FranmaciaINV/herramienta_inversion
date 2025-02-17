@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramientas</title>
+    <style>
+        /* Estilos generales */
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #000; /* Fondo negro */
+            color: #fff; /* Texto blanco */
+        }
+
+        /* Barra de navegación */
+        nav {
+            width: 250px;
+            background-color: #ff7300; /* Naranja */
+            color: white;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        nav h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid white;
+            padding-bottom: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 21px;
+            display: block;
+            margin: 15px 0;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        nav a.disabled {
+            color: #444; /* Oscuro */
+            cursor: not-allowed;
+        }
+
+        nav a.disabled:hover {
+            cursor: not-allowed;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        nav a:hover {
+            color: #fff; /* Naranja oscuro */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Área principal */
+        main {
+            flex: 1;
+            padding: 20px;
+            background-color: #222; /* Fondo gris oscuro */
+        }
+
+        h2 {
+            color: #ff7300; /* Títulos naranjas */
+        }
+
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333; /* Fondo del input gris oscuro */
+            color: white;
+        }
+
+        button {
+            background-color: #ff7300; /* Botón naranja */
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #ff5200; /* Botón naranja oscuro */
+        }
+
+        /* Contenedor de métricas */
+    .metrics-container {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+        gap: 20px;
+    }
+
+    .metric-card {
+        background-color: #333;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        flex: 1;
+        color: #fff;
+    }
+
+    .metric-card h3 {
+        color: #ff7300;
+        margin-bottom: 10px;
+    }
+
+    /* Contenedor de indicadores */
+    .indicators-container {
+        display: flex;
+        justify-content: space-around;
+        gap: 30px;
+        padding: 20px;
+    }
+
+    .indicators-block {
+        width: 45%;
+        background-color: #222;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    .indicator-title {
+        text-align: center;
+        color: #ff7300;
+        margin-bottom: 20px;
+    }
+
+    .indicator {
+        background-color: #333;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .indicator h4 {
+        color: #ff7300;
+        margin-bottom: 8px;
+    }
+
+    .indicator p {
+        color: #fff;
+        margin: 5px 0;
+    }
+
+    /* Contenedor de gráficos */
+    .charts-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+        gap: 20px;
+    }
+
+        /* Resultados */
+        .hidden {
+            display: none;
+        }
+
+        .result-container {
+            background-color: #333; /* Fondo gris oscuro */
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .result-container h3 {
+            color: #ff7300; /* Títulos de resultados en naranja */
+        }
+
+        .error {
+            color: #ff4c4c; /* Errores en rojo */
+        }
+
+        /* Estilo para las noticias */
+        .noticia {
+            background-color: #fff; /* Fondo blanco */
+            color: #000; /* Texto negro */
+            border: 1px solid #ddd; /* Borde gris claro */
+            border-radius: 8px; /* Bordes redondeados */
+            padding: 15px; /* Espaciado interno */
+            margin-bottom: 15px; /* Espaciado entre noticias */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+        }
+
+        .noticia h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #ff7300; /* Color naranja para los títulos */
+        }
+
+        .noticia p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .noticia a {
+            color: #007bff; /* Azul para enlaces */
+            text-decoration: none; /* Sin subrayado */
+            font-weight: bold;
+        }
+
+        .noticia a:hover {
+            text-decoration: underline; /* Subrayado al pasar el cursor */
+        }
+
+        /* Estilos específicos para el Asistente de Servicios */
+        #tabs {
+            display: flex;
+            justify-content: center;
+            background-color: #000;
+            padding: 10px;
+        }
+
+        #tabs button {
+            background-color: #ff7300;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        #tabs button:hover {
+            background-color: #e66400;
+        }
+
+        #tabs button.active {
+            background-color: #333;
+        }
+
+        .contenedor-companias {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .compania-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .compania-card h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #ff7300;
+        }
+
+        .compania-card p {
+            margin: 0 0 10px;
+            color: #000;
+        }
+
+        .error {
+            color: red;
+        }
+
+        #pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        #pagination button {
+            background-color: #ff7300;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+
+        #pagination button.active {
+            background-color: #333;
+        }
+
+        #pagination button:hover {
+            background-color: #e66400;
+        }
+
+        /* Animación de parpadeo */
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Mensajes de chat */
+.message {
+    padding: 10px; /* Espaciado interno */
+    border-radius: 8px;
+    margin-bottom: 10px;
+    max-width: 90%; /* Limitar ancho máximo */
+    margin-left: auto; /* Centrar horizontalmente */
+    margin-right: auto; /* Centrar horizontalmente */
+    line-height: 1.5;
+}
+
+.message.assistant {
+    background-color: #444;
+    color: #fff;
+    text-align: left;
+}
+
+.message.user {
+    background-color: #ff7300;
+    color: #fff;
+    text-align: right;
+    margin-left: auto; /* Asegurarse de que también se aplique aquí */
+    margin-right: auto; /* Asegurarse de que también se aplique aquí */
+}
+
+/* Contenedor del chat */
+#chat-container {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+#chat-messages {
+    background-color: #333;
+    padding: 10px;
+    border-radius: 8px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* 🌎 Diseño Responsive */
+@media (max-width: 1024px) {
+    /* Ajuste del menú lateral en tablets y móviles */
+    nav {
+        width: 200px;
+        padding: 15px;
+    }
+    nav a {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+    main {
+        padding: 15px;
+    }
+}
+
+/* 📱 Estilos para móviles */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    /* 📌 Menú lateral oculto y botón para mostrarlo */
+    nav {
+        width: 100%;
+        height: auto;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: #ff7300;
+        padding: 10px;
+        text-align: center;
+        z-index: 1000;
+        display: none;
+    }
+
+    nav.active {
+        display: block;
+    }
+
+    nav h2 {
+        font-size: 18px;
+    }
+
+    nav a {
+        font-size: 16px;
+        padding: 10px 0;
+    }
+
+    /* 📌 Botón para abrir/cerrar menú */
+    .menu-toggle {
+        display: block;
+        background-color: #ff7300;
+        color: white;
+        font-size: 18px;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    main {
+        margin-top: 50px;
+        padding: 10px;
+    }
+
+    /* 📌 Ajuste de secciones */
+    #buscador-container,
+    #simulador-container,
+    #hipoteca-container {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    #chat-messages {
+        font-size: 16px;
+        padding: 15px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <nav>
+        <h2>
+            <a href="#" onclick="showSection('default-summary')" style="color: #fff; text-decoration: none;">
+                Herramientas
+            </a>
+        </h2>
+        <a href="#" onclick="showSection('demografia')">Estudio Demográfico</a>
+        <a href="#" onclick="showSection('reformas')">Agente de Reformas</a>
+        <a href="#" onclick="showSection('calculadora-rentabilidad')">Calculadora de Rentabilidad Inmobiliaria</a>
+        <a href="#" onclick="showSection('broker-hipotecario')">Bancos y Tasadoras Homologadas</a>
+        <a href="#" onclick="showAsistenteHipotecas()">Broker Hipotecario</a>
+        <a href="#" onclick="showSection('servicios')">Compañías de Servicios</a>
+        <a href="#" onclick="showBuscadorCompanias()">Buscador de Compañías</a>
+        <a href="#" onclick="showSection('generador-contratos')">Generador de Contratos</a>
+        <a href="#" onclick="showSection('noticias')">Newsletter Inmobiliaria</a>
+        <a href="#" onclick="showSimuladorNegociaciones()">Simulador de Negociaciones</a>
+         <!-- Mantenemos los demás agentes sin cambios -->
+        <a href="#" onclick="showBetaSection('Decorador de Interiores', 'Este asistente analiza planos o fotos de tu vivienda y te asesora con ideas de decoración adaptadas a tus gustos y presupuesto. Además, genera imágenes 3D para visualizar cómo quedará tu hogar con las recomendaciones aplicadas.')">
+            Decorador de Interiores
+        </a>
+        
+               
+    </nav>
+    
+    <main id="main-content">
+        <!-- Resumen general con indicadores inmobiliarios y económicos -->
+        <section id="dashboard-summary">
+            <h2 style="text-align: center; color: #ff7300;">Principales Indicadores Inmobiliarios y Económicos</h2>
+            <h2 style="text-align: center; color: #ff7300;">Enero 2025</h2>
+
+            <div class="indicators-container">
+        <!-- Bloque de Indicadores Inmobiliarios -->
+        <div class="indicators-block">
+            <h3 class="indicator-title">Indicadores Inmobiliarios</h3>
+
+            <div class="indicator">
+                <h4>Precio Medio m² Nacional</h4>
+                <p><strong>Precio Medio m²:</strong> 2.237€ m²</p>
+                <p><strong>Variación interanual:</strong> 6,6%</p>
+                <p><strong>Variación desde máximos:</strong> -12,9%</p>
+            </div>
+
+            <div class="indicator">
+                <h4>Compraventa de Viviendas Nacional</h4>
+                <p><strong>Variación interanual:</strong> 15,8%</p>
+                <p><strong>Número absoluto:</strong> 54.299</p>
+                <p><strong>Variación acumulada:</strong> 7,5%</p>
+            </div>
+
+            <div class="indicator">
+                <h4>Índice de Referencia de Arrendamiento de Vivienda - Diciembre 2024</h4>
+                <p><strong>Variación anual:</strong> 2,28%</p>
+            </div>
+
+            <div class="indicator">
+                <h4>Visados de Obra Nueva Nacional</h4>
+                <p><strong>Variación interanual:</strong> 28,7%</p>
+                <p><strong>Número absoluto:</strong> 11.457</p>
+                <p><strong>Variación acumulada:</strong> 11,5%</p>
+            </div>
+
+            <div class="indicator">
+                <h4>Oferta en Portales Inmobiliarios</h4>
+                <p><strong>Número absoluto:</strong> 572.379</p>
+                <p><strong>Variación interanual:</strong> -18,68%</p>
+            </div>
+
+            <div class="indicator">
+                <h4>Hipotecas Nacional</h4>
+                <p><strong>Variación interanual:</strong> 17,9%</p>
+                <p><strong>Número absoluto:</strong> 38.497</p>
+                <p><strong>Variación acumulada:</strong> 9,8%</p>
+            </div>
+
+        </div>
+
+        <!-- Bloque de Indicadores Económicos -->
+        <div class="indicators-block">
+            <h3 class="indicator-title">Indicadores Económicos</h3>
+
+            <div class="indicator">
+                <h4>IPC (Índice de Precios al Consumo)</h4>
+                <p><strong>Tasa anual:</strong> 3,0%</p>
+            </div>
+
+            <div class="indicator">
+                <h4>Euríbor</h4>
+                <p><strong>Tasa mensual:</strong> 2,52%</p>
+            </div>
+
+            <div class="indicator">
+                <h4>Afiliados a la Seguridad Social</h4>
+                <p><strong>Variación interanual:</strong> 2,4%</p>
+                <p><strong>Número absoluto:</strong> 21.095.814</p>
+            </div>
+
+            <div class="indicator">
+                <h4>Paro Registrado Nacional</h4>
+                <p><strong>Variación interanual:</strong> -6,1%</p>
+                <p><strong>Número absoluto:</strong> 2.599.443</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <section id="demografia" class="hidden">
+        <!-- Agente Demográfico -->
+        <h2>Agente Demográfico</h2>
+    <label for="codigo-postal">Selecciona un municipio para consultar:</label>
+    <select id="codigo-postal">
+        <option value="" disabled selected>Municipios disponibles:</option>
+        <option value="28080">28080 “Majadahonda”</option>
+        <option value="03065">03065 “Elche”</option>
+        <option value="37085">37085 “Carbajosa de la Sagrada”</option>
+        <option value="08019">08019 “Barcelona”</option>
+        <option value="49275">49275 “Zamora”</option>
+        <option value="30024">30024 “Lorca”</option>
+        <option value="28079">28079 “Madrid”</option>
+        <option value="48020">48020 “Bilbao”</option>
+        <option value="13013">13013 “Almagro”</option>
+        <option value="18087">18087 “Granada”</option>
+        <option value="36038">36038 “Pontevedra”</option>
+    </select>
+    <button onclick="consultarDemografia()">Consultar</button>
+    <div id="resultados-demografia" class="result-container hidden"></div>
+</section>
+        
+        <!-- Agente de Reformas -->
+        <section id="reformas" class="hidden">
+            <h2>Agente de Reformas</h2>
+            <p>Selecciona las reformas y proporciona la información requerida:</p>
+            <div>
+                <label>
+                    <input type="checkbox" id="ventanas" onchange="toggleInput('ventanas', 'cantidad-ventanas')">
+                    Instalar Ventanas
+                </label>
+                <input type="number" id="cantidad-ventanas" class="hidden" placeholder="Cantidad de ventanas">
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" id="radiadores" onchange="toggleInput('radiadores', 'cantidad-radiadores')">
+                    Instalar Radiadores
+                </label>
+                <input type="number" id="cantidad-radiadores" class="hidden" placeholder="Cantidad de radiadores">
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" id="paredes" onchange="toggleInput('paredes', 'metros-paredes')">
+                    Pintar Paredes
+                </label>
+                <input type="number" id="metros-paredes" class="hidden" placeholder="Metros cuadrados">
+            </div>
+            <div>
+                <label>
+                    <input type="checkbox" id="puertas" onchange="toggleInput('puertas', 'cantidad-puertas')">
+                    Instalar Puertas de Entrada
+                </label>
+                <input type="number" id="cantidad-puertas" class="hidden" placeholder="Cantidad de puertas">
+            </div>
+            <button onclick="consultarReformas()">Consultar</button>
+            <div id="resultados-reformas" class="result-container hidden"></div>
+            <p class="additional-info">
+                *Los precios son obtenidos de la media nacional y pueden variar dependiendo de la zona y la mano de obra.
+            </p>
+        </section>
+    
+        <!-- Calculadora de Rentabilidad Inmobiliaria -->
+        <section id="calculadora-rentabilidad" class="hidden">
+            <h2>Calculadora de Rentabilidad Inmobiliaria</h2>
+            <label for="valor-inmueble">Valor actual del inmueble (€):</label>
+            <input type="number" id="valor-inmueble" placeholder="Ejemplo: 150000">
+
+            <label for="renta-mensual">Renta mensual del inmueble (€):</label>
+            <input type="number" id="renta-mensual" placeholder="Ejemplo: 800">
+
+            <label for="gastos-mensuales">Gastos mensuales del inmueble (€):</label>
+            <input type="number" id="gastos-mensuales" placeholder="Ejemplo: 200">
+
+            <button onclick="calcularRentabilidad()">Calcular</button>
+            <div id="resultados-rentabilidad" class="result-container hidden"></div>
+            <style>
+                table {
+                    width: 100%;
+                    border-collapse: collapse; /* Asegura que los bordes no se dupliquen */
+                    margin-top: 20px;
+                }
+            
+                th, td {
+                    border: 1px solid #fff; /* Borde blanco para que sea visible en el fondo oscuro */
+                    padding: 10px;
+                    text-align: center;
+                }
+            
+                th {
+                    background-color: #ff7300; /* Fondo naranja para los encabezados */
+                    color: #fff;
+                }
+            
+                td {
+                    background-color: #333; /* Fondo gris oscuro para las celdas */
+                    color: #fff;
+                }
+
+            </style>
+        </section>  
+        
+        <!-- Sección de Noticias -->
+        <section id="noticias" class="hidden">
+            <h2>Noticias del Sector Inmobiliario en España</h2>
+            <div id="noticias-container">
+                <p>Cargando noticias...</p>
+            </div>
+        </section>
+
+       <!-- Broker Hipotecario -->
+<section id="broker-hipotecario" class="hidden">
+    <h2>Bancos y Tasadoras Homologadas</h2>
+    <p>Selecciona la información que deseas consultar:</p>
+    <button onclick="consultarBroker('bancos')">Bancos</button>
+    <button onclick="consultarBroker('tasadoras')">Tasadoras Homologadas</button>
+    <div id="resultados-broker">
+        <h3>Resultados:</h3>
+        <table id="tabla-resultados-broker">
+            <thead>
+                <tr id="cabecera-tabla-broker">
+                    <!-- Aquí se generarán dinámicamente las cabeceras -->
+                </tr>
+            </thead>
+            <tbody id="cuerpo-tabla-broker">
+                <!-- Aquí se generarán dinámicamente los datos -->
+            </tbody>
+        </table>
+        <!-- Contenedor para la paginación -->
+        <div id="broker-pagination" style="margin-top: 20px; text-align: center;">
+            <!-- Los botones de paginación se generarán aquí dinámicamente -->
+        </div>
+    </div>
+</section>
+
+<!-- Asistente Hipotecario -->
+<section id="asistente-hipotecas" class="hidden">
+    <h2 style="color: #ff7300; text-align: center;">Broker Hipotecario</h2>
+    <div id="hipoteca-container" style="
+        background-color: #222; 
+        padding: 30px; 
+        border-radius: 8px; 
+        max-width: 800px; 
+        margin: 20px auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;">
+        
+        <div id="hipoteca-messages" style="
+            width: 100%; 
+            background-color: #333; 
+            padding: 20px; 
+            border-radius: 8px; 
+            color: #fff; 
+            font-size: 18px;
+            text-align: left;
+            line-height: 1.6;">
+            
+            <div class="message assistant" style="
+                background-color: #444; 
+                padding: 20px; 
+                border-radius: 8px; 
+                margin-bottom: 10px;">
+                
+                <strong>Broker Hipotecario:</strong><br><br>
+
+                ¡Hola! Soy tu asistente para encontrar la mejor hipoteca.<br><br>
+
+                Mi trabajo es ayudarte a identificar los bancos más adecuados para ti, basándome en tu perfil financiero y en las mejores condiciones del mercado.<br><br>
+
+                Aquí puedes optimizar tu búsqueda sin complicaciones:
+                <ul>
+                    <li>Descubre qué bancos ofrecen las mejores tasas según tu situación.</li>
+                    <li>Obtén una lista priorizada para saber a quién acudir primero.</li>
+                    <li>Ahorra tiempo y dinero accediendo a opciones que realmente se ajustan a ti.</li>
+                </ul>
+                Cuanto mejor sea tu estrategia, mejores serán tus condiciones hipotecarias.<br><br>
+
+                ¿Cuál es tu objetivo? ¿Comprar tu primera vivienda, invertir o mejorar tu hipoteca actual?
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <p id="coming-soon" style="
+                color: #ff7300; 
+                font-size: 20px; 
+                font-weight: bold; 
+                animation: blink 1.5s infinite;">
+                Próximamente Disponible
+            </p>
+        </div>
+    </div>
+</section>
+
+
+        <!-- Agente de Servicios -->
+<section id="servicios" class="hidden">
+    <h2>Compañías de Servicios</h2>
+    <div id="tabs">
+        <button id="tab-luz" onclick="mostrarPestana('luz')">Compañías de Luz</button>
+        <button id="tab-gas" onclick="mostrarPestana('gas')">Compañías de Gas</button>
+        <button id="tab-luzygas" onclick="mostrarPestana('luzygas')">Compañías de Luz y Gas</button>
+    </div>
+
+    <div id="contenidos">
+        <div id="luz-container" class="contenedor-companias"></div>
+        <div id="gas-container" class="contenedor-companias" style="display:none;"></div>
+        <div id="luzygas-container" class="contenedor-companias" style="display:none;"></div>
+    </div>
+
+    <div id="pagination"></div>
+</section>
+
+        <!-- Generador de Contratos -->
+<section id="generador-contratos" class="hidden">
+    <h2>Generador de Contratos</h2>
+    <form method="POST" action="http://127.0.0.1:5000/generar-contrato">
+        
+        <!-- Selector de tipo de contrato -->
+        <div style="margin-bottom: 20px;">
+            <label for="tipo_contrato" style="color: #fff; font-weight: bold; display: block; margin-bottom: 10px;">
+                Selecciona el tipo de contrato:
+            </label>
+            <select id="tipo_contrato" name="tipo_contrato" required
+                style="width: 100%; padding: 10px; background-color: #333; color: #fff; border-radius: 4px; border: none;">
+                <option value="arras">Contrato de Arras</option>
+                <option value="alquiler" disabled>Contrato de alquiler para vivienda habitual (LAU) - Próximamente</option>
+                <option value="habitaciones_temporada" disabled>Contrato de alquiler de habitaciones por temporada - Próximamente</option>
+                <option value="habitaciones_lau" disabled>Contrato de alquiler de habitaciones para vivienda habitual (LAU) - Próximamente</option>
+                <option value="reserva" disabled>Contrato de reserva de un inmueble - Próximamente</option>
+            </select>
+        </div>
+
+        <!-- Datos del Vendedor -->
+        <div style="margin-bottom: 20px;">
+            <label for="nombre_vendedor" style="color: #fff; font-weight: bold; display: block; margin-bottom: 10px;">
+                Nombre del Vendedor:
+            </label>
+            <input type="text" id="nombre_vendedor" name="nombre_vendedor" placeholder="Introduce el nombre del vendedor" required
+                style="width: 100%; padding: 10px; background-color: #333; color: #fff; border-radius: 4px; border: none;">
+        </div>
+
+        <!-- Datos del Comprador -->
+        <div style="margin-bottom: 20px;">
+            <label for="nombre_comprador" style="color: #fff; font-weight: bold; display: block; margin-bottom: 10px;">
+                Nombre del Comprador:
+            </label>
+            <input type="text" id="nombre_comprador" name="nombre_comprador" placeholder="Introduce el nombre del comprador" required
+                style="width: 100%; padding: 10px; background-color: #333; color: #fff; border-radius: 4px; border: none;">
+        </div>
+
+        <!-- Botón para generar y descargar el contrato -->
+        <button type="submit" style="width: 100%; padding: 10px 20px; background-color: #ff7300; border: none; border-radius: 4px; color: white; font-size: 16px; cursor: pointer;">
+            Generar y Descargar Contrato
+        </button>
+    </form>
+</section>
+
+
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        // Cargar métricas iniciales
+        cargarResumenGeneral();
+
+        // Escuchar clics en los enlaces de navegación
+        const links = document.querySelectorAll("nav a");
+        links.forEach(link => {
+            link.addEventListener("click", event => {
+                event.preventDefault();
+                const sectionId = event.target.getAttribute("onclick").match(/'(.*?)'/)[1];
+                showSection(sectionId);
+            });
+        });
+    });
+
+    function showSection(sectionId) {
+    // Ocultar todas las secciones excepto el dashboard-summary
+    const sections = document.querySelectorAll("main > section");
+    sections.forEach(section => {
+        if (section.id !== "dashboard-summary") { 
+            section.classList.add("hidden");
+        }
+    });
+
+    // Mostrar la sección seleccionada
+    if (sectionId) {
+        const selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+            selectedSection.classList.remove("hidden");
+
+            // Cargar noticias si la sección seleccionada es "noticias"
+            if (sectionId === "noticias") {
+                console.log("Cargando noticias...");
+                cargarNoticias();
+            }
+        } else {
+            console.error(`No se encontró la sección con el ID: ${sectionId}`);
+        }
+    }
+}
+
+
+    
+function showBetaSection(agent, description) {
+    // Ocultar todas las secciones
+    const sections = document.querySelectorAll("main > section");
+    sections.forEach(section => section.classList.add("hidden"));
+
+    // Crear o seleccionar la sección dinámica
+    let betaSection = document.getElementById("beta-section");
+    if (!betaSection) {
+        betaSection = document.createElement("section");
+        betaSection.id = "beta-section";
+        document.getElementById("main-content").appendChild(betaSection);
+    }
+
+    // Actualizar el contenido del agente seleccionado
+    betaSection.innerHTML = `
+        <h2>${agent}</h2>
+        <p>${description}</p>
+        <div class="metric-card">
+            <h3>${agent}</h3>
+            <p>Próximamente Disponible.</p>
+        </div>
+    `;
+
+    // Mostrar la sección
+    betaSection.classList.remove("hidden");
+}
+
+    
+        function toggleInput(checkboxId, inputId) {
+            const checkbox = document.getElementById(checkboxId);
+            const input = document.getElementById(inputId);
+            input.classList.toggle('hidden', !checkbox.checked);
+            if (!checkbox.checked) input.value = '';
+        }
+    
+        function consultarDemografia() {
+    const codigoPostal = document.getElementById('codigo-postal').value.trim();
+    const resultadosDiv = document.getElementById('resultados-demografia');
+
+    if (!codigoPostal) {
+        resultadosDiv.innerHTML = '<p class="error">Por favor, introduce un código postal.</p>';
+        resultadosDiv.classList.remove('hidden');
+        return;
+    }
+
+    resultadosDiv.innerHTML = '<p>Cargando resultados...</p>';
+    resultadosDiv.classList.remove('hidden');
+
+    fetch('http://127.0.0.1:5000/consulta-demografica', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ codigo_postal: codigoPostal })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Datos recibidos del backend:", data); // Depuración
+        if (data.error) {
+            resultadosDiv.innerHTML = `<p class="error">${data.error}</p>`;
+        } else {
+            resultadosDiv.innerHTML = `
+                <pre>${data.respuesta_clara}</pre>
+                <h3>Gráficos Demográficos:</h3>
+                <canvas id="grafico-demografico" style="width: 100%; max-width: 600px; height: 300px;"></canvas>
+            `;
+            
+            // Verificar si el objeto 'graficos' existe antes de generar el gráfico
+            if (data.graficos && data.graficos.labels && data.graficos.values) {
+                generarGraficoDemografico('grafico-demografico', data.graficos.labels, data.graficos.values);
+            } else {
+                console.warn("No se encontraron datos para generar el gráfico.");
+                resultadosDiv.innerHTML += `<p class="error">No hay datos disponibles para los gráficos demográficos.</p>`;
+            }
+        }
+    })
+    .catch(err => {
+        resultadosDiv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+    });
+}
+
+function generarGraficoDemografico(canvasId, labels, values) {
+    const canvas = document.getElementById(canvasId);
+
+    // Asegurarse de que el canvas existe antes de intentar generar el gráfico
+    if (!canvas) {
+        console.error(`No se encontró un elemento <canvas> con el ID: ${canvasId}`);
+        return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    
+    // Crear el gráfico
+    new Chart(ctx, {
+        type: 'bar', // Cambiar a "bar" si prefieres barras en lugar de líneas
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Población Española',
+                    data: [values[0], values[2]], // Valores de los españoles (2024, 2023)
+                    backgroundColor: '#4CAF50', // Verde
+                    borderColor: '#388E3C', // Verde más oscuro
+                    borderWidth: 1
+                },
+                {
+                    label: 'Población Extranjera',
+                    data: [values[1], values[3]], // Valores de los extranjeros (2024, 2023)
+                    backgroundColor: '#FF7043', // Naranja
+                    borderColor: '#E64A19', // Naranja más oscuro
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top', // Posición de la leyenda
+                    labels: {
+                        color: '#fff' 
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: '#fff', // Fondo blanco en el tooltip
+                    bodyColor: '#000', // Texto negro en el tooltip
+                    borderColor: '#ddd', // Borde claro del tooltip
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false // Ocultar las líneas de la cuadrícula en X
+                    },
+                    ticks: {
+                        color: '#fff' // Color negro para los números del eje X
+                    }
+                },
+                y: {
+                    grid: {
+                        color: '#ddd' // Líneas de cuadrícula en gris claro
+                    },
+                    ticks: {
+                        color: '#fff' // Color negro para los números del eje Y
+                    },
+                    beginAtZero: true // Comenzar desde cero
+                }
+            }
+        }
+    });
+}
+
+
+        function consultarReformas() {
+            const reformas = [];
+            const resultadosDiv = document.getElementById('resultados-reformas');
+    
+            if (document.getElementById('ventanas').checked) {
+                reformas.push({ tipo: 'ventana', cantidad: parseInt(document.getElementById('cantidad-ventanas').value || 0) });
+            }
+            if (document.getElementById('radiadores').checked) {
+                reformas.push({ tipo: 'radiadores', cantidad: parseInt(document.getElementById('cantidad-radiadores').value || 0) });
+            }
+            if (document.getElementById('paredes').checked) {
+                reformas.push({ tipo: 'paredes', metros: parseFloat(document.getElementById('metros-paredes').value || 0) });
+            }
+            if (document.getElementById('puertas').checked) {
+                reformas.push({ tipo: 'puerta', cantidad: parseInt(document.getElementById('cantidad-puertas').value || 0) });
+            }
+    
+            if (reformas.length === 0) {
+                resultadosDiv.innerHTML = '<p class="error">Seleccione al menos una reforma.</p>';
+                resultadosDiv.classList.remove('hidden'); // Asegúrate de que el div sea visible
+                return;
+            }
+    
+            resultadosDiv.innerHTML = '<p>Cargando resultados...</p>';
+            resultadosDiv.classList.remove('hidden'); // Asegúrate de que el div sea visible
+    
+            fetch('http://127.0.0.1:5000/consulta-reforma', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reformas })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultadosDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                } else {
+                    resultadosDiv.innerHTML = data.respuesta_html;
+                }
+            })
+            .catch(error => {
+                resultadosDiv.innerHTML = `<p class="error">Error al realizar la consulta: ${error.message}</p>`;
+            });
+        }
+    
+        function calcularRentabilidad() {
+            const resultadosDiv = document.getElementById('resultados-rentabilidad');
+            const datos = {
+                valorInmueble: parseFloat(document.getElementById('valor-inmueble').value || 0),
+                rentaMensual: parseFloat(document.getElementById('renta-mensual').value || 0),
+                gastosMensuales: parseFloat(document.getElementById('gastos-mensuales').value || 0),
+            };
+
+            if (!datos.valorInmueble || !datos.rentaMensual || !datos.gastosMensuales) {
+                resultadosDiv.innerHTML = '<p class="error">Por favor, complete todos los campos.</p>';
+                resultadosDiv.classList.remove('hidden');
+                return;
+            }
+
+            resultadosDiv.innerHTML = '<p>Cargando resultados...</p>';
+            resultadosDiv.classList.remove('hidden');
+
+            fetch('http://127.0.0.1:5000/calcular-rentabilidad', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        resultadosDiv.innerHTML = `<p class="error">${data.error}</p>`;
+                    } else {
+                        mostrarResultados(data, resultadosDiv);
+                    }
+                })
+                .catch((error) => {
+                    resultadosDiv.innerHTML = `<p class="error">Error al realizar la consulta: ${error.message}</p>`;
+                });
+        }
+
+        function mostrarResultados(data, resultadosDiv) {
+        // Calcular diferencia entre ingresos y gastos con dos decimales
+        const diferenciaIngresosGastos = data.rentabilidad.map(
+            (valor, index) => (valor - data.gastos[index]).toFixed(2)
+        );
+
+        // Formatear todos los valores a dos decimales
+        const valorInmueble = data.valorInmueble.map(v => v.toFixed(2));
+        const gastos = data.gastos.map(v => v.toFixed(2));
+        const rentabilidad = data.rentabilidad.map(v => v.toFixed(2));
+
+        // Generar tabla de resultados
+        resultadosDiv.innerHTML = `
+            <h3>Resultados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Año</th>
+                        <th>Valor del Inmueble (€)</th>
+                        <th>Gastos (€)</th>
+                        <th>Diferencia Ingresos y Gastos(€)</th>
+                        <th>Rentabilidad (€)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.anios.map((anio, index) => `
+                        <tr>
+                            <td>${anio}</td>
+                            <td>${valorInmueble[index]}</td>
+                            <td>${gastos[index]}</td>
+                            <td>${diferenciaIngresosGastos[index]}</td>
+                            <td>${rentabilidad[index]}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            <canvas id="grafico-datos" style="width: 100%; max-width: 600px; height: 300px; margin-top: 20px;"></canvas>
+        `;
+
+        // Generar gráfica con todos los datos
+        generarGrafico('grafico-datos', data.anios, {
+            'Valor del Inmueble (€)': valorInmueble,
+            'Gastos (€)': gastos,
+            'Rentabilidad (€)': rentabilidad,
+        });
+    }
+
+    function generarGrafico(canvasId, labels, datasets) {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        const colors = ['orange', 'red', 'blue', 'green'];
+        const chartData = Object.keys(datasets).map((key, index) => ({
+            label: key,
+            data: datasets[key],
+            borderColor: colors[index],
+            fill: false,
+        }));
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: chartData,
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
+    }
+
+    async function cargarNoticias() {
+    console.log("Función cargarNoticias llamada"); // Debug
+    const container = document.getElementById("noticias-container");
+    if (!container) {
+        console.error("No se encontró el contenedor de noticias.");
+        return;
+    }
+
+    container.innerHTML = "<p>Cargando noticias...</p>";
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/obtener-noticias");
+        console.log("Respuesta del servidor:", response);
+
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+
+        const noticias = await response.json();
+        console.log("Noticias recibidas:", noticias);
+
+        if (noticias && noticias.length > 0) {
+            container.innerHTML = noticias.map(noticia => `
+                <div class="noticia">
+                    <h2>${noticia.title || "Sin título"}</h2>
+                    <p>${noticia.description || "Sin descripción"}</p>
+                    <p><a href="${noticia.url || "#"}" target="_blank" rel="noopener noreferrer">Leer más</a></p>
+                </div>
+            `).join('');
+        } else {
+            container.innerHTML = "<p>No hay noticias disponibles en este momento.</p>";
+        }
+    } catch (error) {
+        console.error("Error al cargar las noticias:", error);
+        container.innerHTML = `<p class="error">Error al cargar las noticias: ${error.message}</p>`;
+    }
+}
+
+
+// Variables para manejar la paginación
+const itemsPorPagina = 10; // Máximo de elementos por página
+let datosBroker = []; // Almacenará los datos obtenidos del servidor
+let paginaActualBroker = 1; // Página actual
+
+async function consultarBroker(tipo) {
+    const url = `http://127.0.0.1:5000/obtener-datos?tipo=${tipo}`;
+    const tablaResultados = document.getElementById("tabla-resultados-broker");
+    const cabeceraTabla = document.getElementById("cabecera-tabla-broker");
+    const cuerpoTabla = document.getElementById("cuerpo-tabla-broker");
+
+    try {
+        const response = await fetch(url);
+        const datos = await response.json();
+
+        if (!response.ok) {
+            throw new Error(datos.error || "Error desconocido");
+        }
+
+        // Almacenar los datos obtenidos
+        datosBroker = datos;
+        paginaActualBroker = 1; // Reiniciar a la primera página
+        mostrarPaginaBroker(); // Mostrar la primera página
+    } catch (error) {
+        console.error("Error al obtener los datos:", error.message);
+        cabeceraTabla.innerHTML = "<th>Error al cargar los datos</th>";
+        cuerpoTabla.innerHTML = "";
+    }
+}
+
+function mostrarPaginaBroker() {
+    const tablaResultados = document.getElementById("tabla-resultados-broker");
+    const cabeceraTabla = document.getElementById("cabecera-tabla-broker");
+    const cuerpoTabla = document.getElementById("cuerpo-tabla-broker");
+    const inicio = (paginaActualBroker - 1) * itemsPorPagina;
+    const fin = inicio + itemsPorPagina;
+    const datosPagina = datosBroker.slice(inicio, fin);
+
+    // Limpiar la tabla
+    cabeceraTabla.innerHTML = "";
+    cuerpoTabla.innerHTML = "";
+
+    if (datosPagina.length > 0) {
+        // Crear las cabeceras dinámicas
+        const columnas = Object.keys(datosPagina[0]);
+        columnas.forEach(columna => {
+            const th = document.createElement("th");
+            th.textContent = columna;
+            cabeceraTabla.appendChild(th);
+        });
+
+        // Crear las filas dinámicas
+        datosPagina.forEach(fila => {
+            const tr = document.createElement("tr");
+            columnas.forEach(columna => {
+                const td = document.createElement("td");
+                td.textContent = fila[columna] || "N/A";
+                tr.appendChild(td);
+            });
+            cuerpoTabla.appendChild(tr);
+        });
+    } else {
+        cabeceraTabla.innerHTML = "<th>No hay datos disponibles</th>";
+        cuerpoTabla.innerHTML = "";
+    }
+
+    actualizarPaginacionBroker();
+}
+
+function actualizarPaginacionBroker() {
+    const totalPaginas = Math.ceil(datosBroker.length / itemsPorPagina);
+    const pagination = document.getElementById("broker-pagination");
+
+    // Limpiar el contenedor de paginación
+    pagination.innerHTML = "";
+
+    // Aplicar estilos para que los botones estén en una línea horizontal
+    pagination.style.display = "flex";
+    pagination.style.justifyContent = "center";
+    pagination.style.gap = "10px";
+
+    // Determinar el rango de páginas a mostrar
+    const maxBotones = 5;
+    let inicio = Math.max(1, paginaActualBroker - Math.floor(maxBotones / 2));
+    let fin = Math.min(totalPaginas, inicio + maxBotones - 1);
+
+    // Ajustar inicio si el rango es menor al máximo de botones
+    if (fin - inicio + 1 < maxBotones) {
+        inicio = Math.max(1, fin - maxBotones + 1);
+    }
+
+    // Botón para ir a la página anterior
+    if (paginaActualBroker > 1) {
+        const prevButton = document.createElement("button");
+        prevButton.textContent = "«";
+        prevButton.style.padding = "10px 15px";
+        prevButton.style.borderRadius = "5px";
+        prevButton.style.backgroundColor = "#ff7300";
+        prevButton.style.color = "white";
+        prevButton.style.border = "none";
+        prevButton.style.cursor = "pointer";
+
+        prevButton.addEventListener("click", () => {
+            paginaActualBroker -= 1;
+            mostrarPaginaBroker();
+        });
+
+        pagination.appendChild(prevButton);
+    }
+
+    // Botones de páginas
+    for (let i = inicio; i <= fin; i++) {
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.style.padding = "10px 15px";
+        button.style.borderRadius = "5px";
+        button.style.backgroundColor = i === paginaActualBroker ? "#333" : "#ff7300";
+        button.style.color = "white";
+        button.style.border = "none";
+        button.style.cursor = "pointer";
+        button.style.transition = "background-color 0.3s";
+
+        button.addEventListener("mouseover", () => {
+            if (i !== paginaActualBroker) {
+                button.style.backgroundColor = "#e66400";
+            }
+        });
+
+        button.addEventListener("mouseout", () => {
+            if (i !== paginaActualBroker) {
+                button.style.backgroundColor = "#ff7300";
+            }
+        });
+
+        button.addEventListener("click", () => {
+            paginaActualBroker = i;
+            mostrarPaginaBroker();
+        });
+
+        pagination.appendChild(button);
+    }
+
+    // Botón para ir a la página siguiente
+    if (paginaActualBroker < totalPaginas) {
+        const nextButton = document.createElement("button");
+        nextButton.textContent = "»";
+        nextButton.style.padding = "10px 15px";
+        nextButton.style.borderRadius = "5px";
+        nextButton.style.backgroundColor = "#ff7300";
+        nextButton.style.color = "white";
+        nextButton.style.border = "none";
+        nextButton.style.cursor = "pointer";
+
+        nextButton.addEventListener("click", () => {
+            paginaActualBroker += 1;
+            mostrarPaginaBroker();
+        });
+
+        pagination.appendChild(nextButton);
+    }
+}
+
+const companiasPorPagina = 12; // Cantidad de compañías por página
+let companiasActuales = []; // Almacenará las compañías cargadas para la pestaña activa
+let paginaActual = 1; // Página actual
+
+async function cargarCompanias(tipo) {
+    const container = document.getElementById(`${tipo}-container`);
+    try {
+        container.innerHTML = "<p>Cargando compañías...</p>";
+        const response = await fetch(`http://127.0.0.1:5000/obtener-companias?tipo=${tipo}`);
+        if (!response.ok) {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+
+        const companias = await response.json();
+        console.log("Datos recibidos del servidor:", companias); // Depuración
+        if (companias.length > 0) {
+            companiasActuales = companias; // Almacenar compañías cargadas
+            paginaActual = 1; // Reiniciar a la primera página
+            mostrarPagina(tipo);
+        } else {
+            container.innerHTML = "<p>No hay compañías disponibles en este momento.</p>";
+        }
+    } catch (error) {
+        console.error("Error al cargar las compañías:", error);
+        container.innerHTML = `<p class="error">Error al cargar las compañías: ${error.message}</p>`;
+    }
+}
+
+
+function mostrarPagina(tipo) {
+    const container = document.getElementById(`${tipo}-container`);
+    const inicio = (paginaActual - 1) * companiasPorPagina;
+    const fin = inicio + companiasPorPagina;
+
+    // Obtener las compañías de la página actual
+    const companiasPagina = companiasActuales.slice(inicio, fin);
+
+    // Limpiar el contenedor
+    container.innerHTML = "";
+
+    // Depuración: Ver datos de las compañías
+    console.log("Compañías para la página actual:", companiasPagina);
+
+    // Crear las tarjetas
+    companiasPagina.forEach((compania) => {
+        const cardHTML = `
+            <div class="compania-card">
+                <h3>${compania.nombre || "Nombre no disponible"}</h3>
+                <p>${compania.descripcion || "Descripción no disponible."}</p>
+            </div>
+        `;
+        container.innerHTML += cardHTML;
+    });
+
+    actualizarPaginacion(tipo);
+}
+
+
+
+function actualizarPaginacion(tipo) {
+    const totalPaginas = Math.ceil(companiasActuales.length / companiasPorPagina);
+    const pagination = document.getElementById("pagination");
+
+    pagination.innerHTML = ""; // Limpiar el contenedor de paginación
+
+    for (let i = 1; i <= totalPaginas; i++) {
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.classList.toggle("active", i === paginaActual);
+        button.onclick = () => {
+            paginaActual = i;
+            mostrarPagina(tipo);
+        };
+        pagination.appendChild(button);
+    }
+}
+
+function mostrarPestana(tipo) {
+    const pestanas = ["luz", "gas", "luzygas"];
+    pestanas.forEach((pestana) => {
+        const container = document.getElementById(`${pestana}-container`);
+        const tabButton = document.getElementById(`tab-${pestana}`);
+        if (pestana === tipo) {
+            container.style.display = "grid";
+            tabButton.classList.add("active");
+            cargarCompanias(tipo);
+        } else {
+            container.style.display = "none";
+            tabButton.classList.remove("active");
+        }
+    });
+}
+
+function showAsistenteHipotecas() {
+    // Ocultar todas las secciones
+    const sections = document.querySelectorAll("main > section");
+    sections.forEach(section => section.classList.add("hidden"));
+
+    // Mostrar la sección del asistente hipotecario
+    let hipotecaSection = document.getElementById("asistente-hipotecas");
+    if (!hipotecaSection) {
+        hipotecaSection = document.createElement("section");
+        hipotecaSection.id = "asistente-hipotecas";
+        document.getElementById("main-content").appendChild(hipotecaSection);
+    }
+
+    // Actualizar contenido
+    hipotecaSection.classList.remove("hidden");
+}
+
+function showBuscadorCompanias() {
+    // Ocultar todas las secciones existentes
+    const sections = document.querySelectorAll("main > section");
+    sections.forEach(section => section.classList.add("hidden"));
+
+    // Crear o seleccionar la sección del buscador de compañías
+    let buscadorSection = document.getElementById("buscador-companias");
+
+    if (!buscadorSection) {
+        // Crear la sección si no existe
+        buscadorSection = document.createElement("section");
+        buscadorSection.id = "buscador-companias";
+        document.getElementById("main-content").appendChild(buscadorSection);
+    }
+
+    // Insertar contenido en la sección del buscador
+    buscadorSection.innerHTML = `
+        <h2 style="color: #ff7300; text-align: center;">Buscador de Compañías</h2>
+        <div id="buscador-container" style="
+            background-color: #222; 
+            padding: 30px; 
+            border-radius: 8px; 
+            max-width: 800px; 
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 500px;">
+            
+            <div id="chat-messages" style="
+                width: 100%; 
+                background-color: #333; 
+                padding: 30px; 
+                border-radius: 8px; 
+                color: #fff; 
+                font-size: 18px;
+                text-align: left;
+                line-height: 1.8;
+                height: auto;
+                max-height: none;">
+                
+                <div class="message assistant" style="
+                    background-color: #444; 
+                    padding: 20px; 
+                    border-radius: 8px; 
+                    margin-bottom: 10px;">
+                    
+                    <strong>Asistente de Comparación de Servicios:</strong><br><br>
+
+                    Hola, soy tu asistente para encontrar las mejores ofertas en luz y gas.<br><br>
+
+                    Mi trabajo es ayudarte a pagar menos y obtener las mejores condiciones de tus suministros.<br><br>
+
+                    Aquí no tienes que buscar ni comparar manualmente:
+                    <ul style="text-align: left; padding-left: 20px;">
+                        <li>Analizo por ti las compañías disponibles.</li>
+                        <li>Comparo tarifas, descuentos y condiciones en tiempo real.</li>
+                        <li>Te recomiendo, en orden de preferencia, las mejores opciones según tu consumo.</li>
+                    </ul>
+                    Cuanto mejor optimices tu contrato, mayor será tu ahorro cada mes.<br><br>
+
+                    Dime, ¿quieres saber cuál es la mejor oferta para ti?
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <p id="coming-soon" style="
+                    color: #ff7300; 
+                    font-size: 20px; 
+                    font-weight: bold; 
+                    animation: blink 1.5s infinite;">
+                    Próximamente Disponible
+                </p>
+            </div>
+        </div>
+    `;
+
+    // Mostrar la sección asegurándose de que no esté oculta
+    buscadorSection.classList.remove("hidden");
+}
+
+function showSimuladorNegociaciones() {
+    // Ocultar todas las secciones existentes
+    const sections = document.querySelectorAll("main > section");
+    sections.forEach(section => section.classList.add("hidden"));
+
+    // Verificar si la sección ya existe
+    let simuladorSection = document.getElementById("simulador-negociaciones");
+
+    if (!simuladorSection) {
+        // Crear la sección si no existe
+        simuladorSection = document.createElement("section");
+        simuladorSection.id = "simulador-negociaciones";
+        document.getElementById("main-content").appendChild(simuladorSection);
+    }
+
+    // Insertar contenido en la sección del simulador
+    simuladorSection.innerHTML = `
+        <h2 style="color: #ff7300; text-align: center;">Simulador de Negociaciones</h2>
+        <div id="simulador-container" style="
+            background-color: #222; 
+            padding: 30px; 
+            border-radius: 8px; 
+            max-width: 800px; 
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 500px;">
+            
+            <div id="chat-messages" style="
+                width: 100%; 
+                background-color: #333; 
+                padding: 30px; 
+                border-radius: 8px; 
+                color: #fff; 
+                font-size: 18px;
+                text-align: left;
+                line-height: 1.8;
+                height: auto;
+                max-height: none;">
+                
+                <div class="message assistant" style="
+                    background-color: #444; 
+                    padding: 20px; 
+                    border-radius: 8px; 
+                    margin-bottom: 10px;">
+                    
+                    <strong>Asistente de Negociaciones:</strong><br><br>
+
+                    ¡Hola! Soy tu asistente de negociaciones inmobiliarias.<br><br>
+
+                    Mi trabajo es ayudarte a comprar, vender o alquilar con confianza, utilizando estrategias reales y datos actualizados del mercado.<br><br>
+
+                    Aquí puedes practicar sin riesgos:
+                    <ul style="text-align: left; padding-left: 20px;">
+                        <li>Simula conversaciones con compradores, vendedores o inquilinos.</li>
+                        <li>Mejora tus habilidades para cerrar acuerdos más favorables.</li>
+                        <li>Aprende a manejar objeciones y negociar con seguridad.</li>
+                    </ul>
+                    Cuanto más practiques, mejores serán tus resultados en el mundo real.<br><br>
+
+                    ¿Qué tipo de negociación quieres ensayar hoy?
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <p id="coming-soon" style="
+                    color: #ff7300; 
+                    font-size: 20px; 
+                    font-weight: bold; 
+                    animation: blink 1.5s infinite;">
+                    Próximamente Disponible
+                </p>
+            </div>
+        </div>
+    `;
+
+    // Mostrar la sección asegurándose de que no esté oculta
+    simuladorSection.classList.remove("hidden");
+}
+
+// Asegurar que el dashboard-summary se muestra por defecto
+document.addEventListener("DOMContentLoaded", () => {
+    const dashboard = document.getElementById("dashboard-summary");
+    
+    if (dashboard) {
+        dashboard.classList.remove("hidden"); // Asegurar que el dashboard es visible
+    }
+
+    // Ocultar todas las demás secciones excepto el dashboard
+    const sections = document.querySelectorAll("main > section");
+    sections.forEach(section => {
+        if (section.id !== "dashboard-summary") {
+            section.classList.add("hidden");
+        }
+    });
+
+    // Crear un contenedor dinámico si no existe
+    if (!document.getElementById("beta-section")) {
+        const betaSection = document.createElement("section");
+        betaSection.id = "beta-section";
+        betaSection.classList.add("hidden");
+        document.getElementById("main-content").appendChild(betaSection);
+    }
+});
+
+    </script>
+</body>
+</html>

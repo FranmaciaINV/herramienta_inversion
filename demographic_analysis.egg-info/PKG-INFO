@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: demographic_analysis
+Version: 0.1
+Summary: Librería para análisis de datos demográficos y estudios de mercado.
+Author: Francisco Maciá
+Author-email: tu_email@example.com
+Requires-Dist: pandas
+Requires-Dist: openpyxl
+Requires-Dist: matplotlib

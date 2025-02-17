@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Bancos y Tasadoras</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000; /* Fondo negro */
+            color: #fff; /* Texto blanco */
+        }
+
+        header {
+            background-color: #ff7300; /* Naranja */
+            color: #fff; /* Blanco */
+            padding: 15px;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        button {
+            background-color: #ff7300; /* Naranja */
+            color: #fff; /* Blanco */
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #cc5c00; /* Naranja más oscuro */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #333; /* Gris oscuro */
+            color: #fff; /* Blanco */
+        }
+
+        table, th, td {
+            border: 1px solid #ff7300; /* Naranja */
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ff7300; /* Naranja */
+            color: #fff; /* Blanco */
+        }
+
+        .error {
+            color: #ff7300; /* Naranja */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Consulta de Bancos y Tasadoras</h1>
+    </header>
+    <div class="container">
+        <h2>Selecciona la información que deseas consultar:</h2>
+        <button onclick="consultarDatos('bancos')">Bancos</button>
+        <button onclick="consultarDatos('tasadoras')">Tasadoras Homologadas</button>
+
+        <div id="resultados">
+            <h3>Resultados:</h3>
+            <table id="tabla-resultados">
+                <thead>
+                    <tr id="cabecera-tabla">
+                        <!-- Aquí se generarán dinámicamente las cabeceras -->
+                    </tr>
+                </thead>
+                <tbody id="cuerpo-tabla">
+                    <!-- Aquí se generarán dinámicamente los datos -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        async function consultarDatos(tipo) {
+            const url = `http://127.0.0.1:5000/obtener-datos?tipo=${tipo}`;
+            const tablaResultados = document.getElementById("tabla-resultados");
+            const cabeceraTabla = document.getElementById("cabecera-tabla");
+            const cuerpoTabla = document.getElementById("cuerpo-tabla");
+
+            try {
+                const response = await fetch(url);
+                const datos = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(datos.error || "Error desconocido");
+                }
+
+                if (datos.length > 0) {
+                    // Limpiar la tabla
+                    cabeceraTabla.innerHTML = "";
+                    cuerpoTabla.innerHTML = "";
+
+                    // Crear las cabeceras dinámicas
+                    const columnas = Object.keys(datos[0]);
+                    columnas.forEach(columna => {
+                        const th = document.createElement("th");
+                        th.textContent = columna;
+                        cabeceraTabla.appendChild(th);
+                    });
+
+                    // Crear las filas dinámicas
+                    datos.forEach(fila => {
+                        const tr = document.createElement("tr");
+                        columnas.forEach(columna => {
+                            const td = document.createElement("td");
+                            td.textContent = fila[columna] || "N/A";
+                            tr.appendChild(td);
+                        });
+                        cuerpoTabla.appendChild(tr);
+                    });
+                } else {
+                    cabeceraTabla.innerHTML = "<th>No hay datos disponibles</th>";
+                    cuerpoTabla.innerHTML = "";
+                }
+            } catch (error) {
+                console.error("Error al obtener los datos:", error.message);
+                cabeceraTabla.innerHTML = "<th>Error al cargar los datos</th>";
+                cuerpoTabla.innerHTML = "";
+            }
+        }
+    </script>
+</body>
+</html>

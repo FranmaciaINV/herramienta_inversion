@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta Demográfica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #222;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff7300;
+        }
+        label, input, button {
+            display: block;
+            margin-bottom: 15px;
+        }
+        input {
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+        }
+        button {
+            background-color: #ff7300;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff5200;
+        }
+        .result-container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .result-container h3 {
+            color: #ff7300;
+        }
+        .error {
+            color: #ff4c4c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consulta Demográfica</h1>
+    <label for="codigo-postal">Introduce el código postal:</label>
+    <input type="text" id="codigo-postal" placeholder="Ej. 28013">
+    <button onclick="consultarDemografia()">Consultar</button>
+    <div id="resultados" class="result-container hidden"></div>
+
+    <script>
+        function consultarDemografia() {
+            const codigoPostal = document.getElementById("codigo-postal").value.trim();
+            const resultadosDiv = document.getElementById("resultados");
+
+            if (!codigoPostal) {
+                resultadosDiv.innerHTML = "<p class='error'>Por favor, introduce un código postal.</p>";
+                resultadosDiv.classList.remove("hidden");
+                return;
+            }
+
+            resultadosDiv.innerHTML = "<p>Cargando resultados...</p>";
+            resultadosDiv.classList.remove("hidden");
+
+            fetch("http://127.0.0.1:5000/consulta-demografica", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ codigo_postal: codigoPostal })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultadosDiv.innerHTML = `<p class='error'>${data.error}</p>`;
+                } else {
+                    resultadosDiv.innerHTML = `
+                        <h3>Resultados:</h3>
+                        <div>${data.respuesta_clara.replace(/\n/g, '<br>')}</div>
+                    `;
+                }
+            })
+            .catch(error => {
+                resultadosDiv.innerHTML = "<p class='error'>Error al realizar la consulta.</p>";
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>

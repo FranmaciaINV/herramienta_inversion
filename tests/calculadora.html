@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Rentabilidad</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #ff7300;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        #calculadora {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #ff7300;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #e66400;
+        }
+
+        #resultados {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f4f4f4;
+            border-radius: 8px;
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ff7300;
+            color: white;
+        }
+
+        .graficas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-around;
+        }
+
+        canvas {
+            max-width: 300px;
+            max-height: 200px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Calculadora de Rentabilidad Inmobiliaria</h1>
+    </header>
+    <div id="calculadora">
+        <div class="form-group">
+            <label for="valorInmueble">Valor actual del inmueble (€):</label>
+            <input type="number" id="valorInmueble" required>
+        </div>
+        <div class="form-group">
+            <label for="rentaMensual">Renta mensual (€):</label>
+            <input type="number" id="rentaMensual" required>
+        </div>
+        <div class="form-group">
+            <label for="gastosMensuales">Gastos mensuales (€):</label>
+            <input type="number" id="gastosMensuales" required>
+        </div>
+        <button onclick="calcular()">Calcular</button>
+    </div>
+
+    <div id="resultados">
+        <h2>Resultados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Año</th>
+                    <th>Valor del Inmueble (€)</th>
+                    <th>Gastos Totales (€)</th>
+                    <th>Rentabilidad (€)</th>
+                    <th>Diferencia Ingresos-Gastos (€)</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-resultados"></tbody>
+        </table>
+        <div class="graficas">
+            <canvas id="grafica-valor"></canvas>
+            <canvas id="grafica-gastos"></canvas>
+            <canvas id="grafica-rentabilidad"></canvas>
+            <canvas id="grafica-diferencia"></canvas>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        async function calcular() {
+            const valorInmueble = parseFloat(document.getElementById("valorInmueble").value);
+            const rentaMensual = parseFloat(document.getElementById("rentaMensual").value);
+            const gastosMensuales = parseFloat(document.getElementById("gastosMensuales").value);
+
+            if (!valorInmueble || !rentaMensual || !gastosMensuales) {
+                alert("Por favor, completa todos los campos.");
+                return;
+            }
+
+            const response = await fetch("http://127.0.0.1:5002/calcular-rentabilidad", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    valorInmueble,
+                    rentaMensual,
+                    gastosMensuales
+                })
+            });
+
+            const data = await response.json();
+
+            mostrarResultados(data);
+        }
+
+        function mostrarResultados(data) {
+            document.getElementById("resultados").style.display = "block";
+
+            // Poblar tabla
+            const tablaResultados = document.getElementById("tabla-resultados");
+            tablaResultados.innerHTML = "";
+            for (let i = 0; i < data.anios.length; i++) {
+                const fila = `
+                    <tr>
+                        <td>${data.anios[i]}</td>
+                        <td>${data.valorInmueble[i].toLocaleString()}</td>
+                        <td>${data.gastos[i].toLocaleString()}</td>
+                        <td>${data.rentabilidad[i].toLocaleString()}</td>
+                        <td>${(data.rentabilidad[i] - data.gastos[i]).toLocaleString()}</td>
+                    </tr>
+                `;
+                tablaResultados.innerHTML += fila;
+            }
+
+            // Crear gráficas
+            crearGrafica("grafica-valor", "Valor del Inmueble (€)", data.anios, data.valorInmueble, "#ff7300");
+            crearGrafica("grafica-gastos", "Gastos Totales (€)", data.anios, data.gastos, "#e66400");
+            crearGrafica("grafica-rentabilidad", "Rentabilidad (€)", data.anios, data.rentabilidad, "#00b894");
+            crearGrafica("grafica-diferencia", "Diferencia Ingresos-Gastos (€)", data.anios, data.rentabilidad.map((r, i) => r - data.gastos[i]), "#0984e3");
+        }
+
+        function crearGrafica(id, titulo, etiquetas, datos, color) {
+            const ctx = document.getElementById(id).getContext("2d");
+            new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: etiquetas,
+                    datasets: [
+                        {
+                            label: titulo,
+                            data: datos,
+                            borderColor: color,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+    </script>
+</body>
+</html>
