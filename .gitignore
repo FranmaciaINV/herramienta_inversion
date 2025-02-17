@@ -3,3 +3,8 @@ __pycache__/
 demographic_analysis.egg-info/
 files/
 
+__pycache__/
+*.pyc
+.env
+scripts/claveOpenai.env
+scripts/claves.gitignore
