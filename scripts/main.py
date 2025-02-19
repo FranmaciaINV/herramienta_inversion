@@ -17,7 +17,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "../templates")
 
 
 app = Flask(__name__, template_folder=TEMPLATE_DIR)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Verificación de la carpeta templates en Render
 print("🔍 DEBUG: Verificando templates en Render...")
@@ -57,7 +57,8 @@ def guardar_email():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    port = int(os.environ.get("PORT", 5001))  # Usa el puerto de Render
+    app.run(debug=True, host='0.0.0.0', port=port)
 
 # Ruta para consultas demográficas
 @app.route('/consulta-demografica', methods=['POST'])

@@ -961,11 +961,12 @@ function showBetaSection(agent, description) {
     resultadosDiv.innerHTML = '<p>Cargando resultados...</p>';
     resultadosDiv.classList.remove('hidden');
 
-    fetch('http://127.0.0.1:5000/consulta-demografica', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ codigo_postal: codigoPostal })
-    })
+    fetch('/consulta-demografica', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ codigo_postal: codigoPostal })
+})
+
     .then(response => response.json())
     .then(data => {
         console.log("Datos recibidos del backend:", data); // Depuración
@@ -1092,7 +1093,7 @@ function generarGraficoDemografico(canvasId, labels, values) {
             resultadosDiv.innerHTML = '<p>Cargando resultados...</p>';
             resultadosDiv.classList.remove('hidden'); // Asegúrate de que el div sea visible
     
-            fetch('http://127.0.0.1:5000/consulta-reforma', {
+            fetch('/consulta-reforma', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ reformas })
@@ -1127,7 +1128,7 @@ function generarGraficoDemografico(canvasId, labels, values) {
             resultadosDiv.innerHTML = '<p>Cargando resultados...</p>';
             resultadosDiv.classList.remove('hidden');
 
-            fetch('http://127.0.0.1:5000/calcular-rentabilidad', {
+            fetch('/calcular-rentabilidad', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datos),
@@ -1244,7 +1245,7 @@ function generarGraficoDemografico(canvasId, labels, values) {
     container.innerHTML = "<p>Cargando noticias...</p>";
 
     try {
-        const response = await fetch("http://127.0.0.1:5000/obtener-noticias");
+        const response = await fetch("/obtener-noticias");
         console.log("Respuesta del servidor:", response);
 
         if (!response.ok) {
@@ -1442,7 +1443,7 @@ async function cargarCompanias(tipo) {
     const container = document.getElementById(`${tipo}-container`);
     try {
         container.innerHTML = "<p>Cargando compañías...</p>";
-        const response = await fetch(`http://127.0.0.1:5000/obtener-companias?tipo=${tipo}`);
+        const response = await fetch(`/obtener-companias?tipo=${tipo}`);
         if (!response.ok) {
             throw new Error(`Error en la solicitud: ${response.status}`);
         }
@@ -1754,7 +1755,7 @@ function guardarEmail() {
     document.getElementById("emailPopup").style.display = "none";
 
     // Enviar el email al backend
-    fetch("http://localhost:5001/guardar-email", {  // ⚠️ CAMBIO: Asegurar que usa el puerto 5001
+    fetch("/guardar-email", {  // ⚠️ CAMBIO: Asegurar que usa el puerto 5001
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email })
