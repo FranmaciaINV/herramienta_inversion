@@ -15,6 +15,11 @@ from flask import send_file
 app = Flask(__name__)
 CORS(app)
 
+@app.route("/")
+def home():
+    return "Bienvenido a la Herramienta de Inversión Inmobiliaria 🚀"
+
+
 # Ruta donde se guardarán los correos
 EMAILS_FILE = "emails_guardados.txt"
 
