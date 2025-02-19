@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import agente_demografico
 import agente_reformas
@@ -18,6 +18,10 @@ CORS(app)
 @app.route("/")
 def home():
     return "Bienvenido a la Herramienta de Inversión Inmobiliaria 🚀"
+
+@app.route("/")
+def home():
+    return render_template("index.html")  # Renderiza el HTML desde templates/
 
 
 # Ruta donde se guardarán los correos
