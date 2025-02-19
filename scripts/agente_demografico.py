@@ -127,21 +127,27 @@ def generar_resumen_con_porcentajes(codigo_postal, datos):
             except:
                 empleo_paro_resumen.append("- No se encontraron datos sobre nuevos contratos.")
 
-    # Construir el resumen final
+    # Asegurar que las listas no sean None
+    demografia_resumen_str = "\n    ".join(demografia_resumen) if demografia_resumen else "No disponible"
+    renta_resumen_str = "\n    ".join(renta_resumen) if renta_resumen else "No disponible"
+    empleo_paro_resumen_str = "\n    ".join(empleo_paro_resumen) if empleo_paro_resumen else "No disponible"
+
+    # Crear el resumen
     resumen = f"""
-Resumen de los datos para el código postal {codigo_postal}:
+    Resumen de los datos para el código postal {codigo_postal}:
 
-    Demografía:
-    {"\n    ".join(demografia_resumen)}
+        Demografía:
+        {demografia_resumen_str}
 
-    Renta:
-    {"\n    ".join(renta_resumen)}
+        Renta:
+        {renta_resumen_str}
 
-    Empleo y Paro:
-    {"\n    ".join(empleo_paro_resumen)}
-"""
+        Empleo y Paro:
+        {empleo_paro_resumen_str}
+    """
 
     return resumen.strip()
+
 
 # Endpoint para la consulta
 @app.route("/consulta-demografica", methods=["POST"])
