@@ -23,7 +23,11 @@ ARCHIVOS = {
     "demografia": "../data/demografia_municipios_mvp.csv"
 }
 
-CP_MUNICIPIOS_PATH = "../data/CP_Municipios.csv"
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Obtiene la ruta absoluta del script actual
+CP_MUNICIPIOS_PATH = os.path.join(BASE_DIR, "../data/CP_Municipios.csv")  # Construye la ruta completa
+
 
 # Cargar el archivo CP_Municipios.csv
 try:
