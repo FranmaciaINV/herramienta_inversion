@@ -15,9 +15,6 @@ from flask import send_file
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/")
-def home():
-    return "Bienvenido a la Herramienta de Inversión Inmobiliaria 🚀"
 
 @app.route("/")
 def home():
