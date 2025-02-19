@@ -15,6 +15,31 @@ from flask import send_file
 app = Flask(__name__)
 CORS(app)
 
+# Ruta donde se guardarán los correos
+EMAILS_FILE = "emails_guardados.txt"
+
+@app.route('/guardar-email', methods=['POST'])
+def guardar_email():
+    try:
+        data = request.get_json()
+        email = data.get("email")
+
+        if not email or "@" not in email:
+            return jsonify({"error": "Email no válido"}), 400
+
+        # Guardar email en un archivo
+        with open(EMAILS_FILE, "a") as file:
+            file.write(email + "\n")
+
+        print(f"Nuevo email guardado: {email}")
+
+        return jsonify({"message": "Email guardado correctamente"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5001)
+
 # Ruta para consultas demográficas
 @app.route('/consulta-demografica', methods=['POST'])
 def consulta_demografica():

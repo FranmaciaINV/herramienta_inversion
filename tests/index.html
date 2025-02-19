@@ -428,10 +428,82 @@
     }
 }
 
+/* 🌟 ESTILOS DEL POPUP */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.popup-content {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0px 0px 10px rgba(255, 115, 0, 0.7);
+}
+
+.popup-content h2 {
+    color: #ff7300;
+    margin-bottom: 10px;
+}
+
+.popup-content input {
+    width: 90%;  
+    padding: 12px; 
+    margin: 10px auto; 
+    display: block; 
+    border: 1px solid #ff7300; 
+    border-radius: 5px; 
+    background-color: #333; 
+    color: white; 
+    text-align: center; 
+    font-size: 16px; 
+}
+
+
+.popup-content button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #ff7300;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.popup-content button:hover {
+    background-color: #ff5200;
+}
+
     </style>
 </head>
 <body>
     <nav>
+       <!-- POPUP DE EMAIL -->
+<div id="emailPopup" class="popup">
+    <div class="popup-content">
+        <h2>HERRAMIENTA INVERSIÓN INMOBILIARIA</h2>
+        <p>Introduce tu email para acceder:</p>
+        <input type="email" id="emailInput" placeholder="Tu email aquí..." required>
+        <button onclick="guardarEmail()">Acceder</button>
+    </div>
+</div>
+ 
+</div>
+
         <h2>
             <a href="#" onclick="showSection('default-summary')" style="color: #fff; text-decoration: none;">
                 Herramientas
@@ -1109,48 +1181,57 @@ function generarGraficoDemografico(canvasId, labels, values) {
                     `).join('')}
                 </tbody>
             </table>
-            <canvas id="grafico-datos" style="width: 100%; max-width: 600px; height: 300px; margin-top: 20px;"></canvas>
+            <canvas id="grafico-datos" style="width: 100%; max-width: 500px; height: 250px; margin-top: 20px;"></canvas>
         `;
 
         // Generar gráfica con todos los datos
         generarGrafico('grafico-datos', data.anios, {
             'Valor del Inmueble (€)': valorInmueble,
-            'Gastos (€)': gastos,
-            'Rentabilidad (€)': rentabilidad,
         });
     }
 
     function generarGrafico(canvasId, labels, datasets) {
-        const ctx = document.getElementById(canvasId).getContext('2d');
-        const colors = ['orange', 'red', 'blue', 'green'];
-        const chartData = Object.keys(datasets).map((key, index) => ({
-            label: key,
-            data: datasets[key],
-            borderColor: colors[index],
-            fill: false,
-        }));
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    const colors = ['orange', 'red', 'blue', 'green'];
+    const chartData = Object.keys(datasets).map((key, index) => ({
+        label: key,
+        data: datasets[key],
+        borderColor: colors[index],
+        fill: false,
+    }));
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: chartData,
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                    },
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: chartData,
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Permite ajustar el tamaño manualmente
+            plugins: {
+                legend: {
+                    position: 'top',
                 },
             },
-        });
-    }
+            scales: {
+                y: {
+                    beginAtZero: false, // No comienza desde 0 para evitar espacio vacío
+                    suggestedMin: Math.min(...datasets["Valor del Inmueble (€)"]) - 5000,
+                    suggestedMax: Math.max(...datasets["Valor del Inmueble (€)"]) + 5000,
+                    ticks: {
+                        stepSize: 10_000, // Ajusta este valor para definir los saltos (antes era 50.000)
+                        color: "#fff", // Color blanco para los números en el eje Y
+                        font: {
+                            size: 14 // Tamaño de la fuente en el eje Y
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
 
     async function cargarNoticias() {
     console.log("Función cargarNoticias llamada"); // Debug
@@ -1651,6 +1732,41 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("main-content").appendChild(betaSection);
     }
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    if (!localStorage.getItem("userEmail")) {
+        document.getElementById("emailPopup").style.display = "flex";
+    }
+});
+
+function guardarEmail() {
+    let email = document.getElementById("emailInput").value.trim();
+    
+    if (email === "" || !email.includes("@")) {
+        alert("Por favor, introduce un email válido.");
+        return;
+    }
+
+    // Guardamos el email en localStorage para evitar que vuelva a salir el popup
+    localStorage.setItem("userEmail", email);
+
+    // Ocultamos el popup
+    document.getElementById("emailPopup").style.display = "none";
+
+    // Enviar el email al backend
+    fetch("http://localhost:5001/guardar-email", {  // ⚠️ CAMBIO: Asegurar que usa el puerto 5001
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Respuesta del backend:", data);
+        alert("Correo guardado correctamente.");
+    })
+    .catch(error => console.error("Error al guardar el email:", error));
+}
+
 
     </script>
 </body>
