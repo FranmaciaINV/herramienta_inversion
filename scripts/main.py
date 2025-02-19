@@ -276,5 +276,8 @@ def generar_contrato():
         return jsonify({"error": f"Error al generar el contrato: {str(e)}"}), 500
 
 
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+if __name__ == '__main__':
+    import os
+    port = int(os.environ.get("PORT", 5000))  # Usa el puerto que Render asigna
+    app.run(debug=True, host='0.0.0.0', port=port)
+
