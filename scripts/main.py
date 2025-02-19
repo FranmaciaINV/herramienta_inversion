@@ -57,8 +57,8 @@ def guardar_email():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5001))  # Usa el puerto de Render
-    app.run(debug=True, host='0.0.0.0', port=port)
+    app.run(debug=True, host='0.0.0.0')
+
 
 # Ruta para consultas demográficas
 @app.route('/consulta-demografica', methods=['POST'])
@@ -175,7 +175,7 @@ def calcular_rentabilidad():
         return jsonify({"error": f"Error en el agente de rentabilidad: {str(e)}"}), 500
     
     # Ruta para obtener noticias inmobiliarias
-@app.route("/obtener-noticias", methods=["GET"])
+@app.route("/obtener-noticias", methods=["POST"])
 def obtener_noticias():
     try:
         noticias = newsletter_inmobiliaria.obtener_noticias_inmobiliarias()
@@ -184,7 +184,7 @@ def obtener_noticias():
         return jsonify({"error": f"Error en el agente de noticias: {str(e)}"}), 500
 
     # Ruta para el Broker Hipotecario
-@app.route("/obtener-datos", methods=["GET"])
+@app.route("/obtener-datos", methods=["POST"])
 def obtener_datos():
     try:
         tipo = request.args.get("tipo", "bancos")
@@ -198,7 +198,7 @@ def obtener_datos():
         return jsonify({"error": f"Error en el Broker Hipotecario: {str(e)}"}), 500
 
 # Ruta para obtener compañías de servicios
-@app.route("/obtener-companias", methods=["GET"])
+@app.route("/obtener-companias", methods=["POST"])
 def obtener_companias():
     """
     Unifica el funcionamiento del agente de servicios para cargar compañías.
