@@ -12,9 +12,22 @@ import pandas as pd
 from flask import send_file
 
 
-app = Flask(__name__, template_folder="templates")
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+TEMPLATE_DIR = os.path.join(BASE_DIR, "../templates")
+
+
+app = Flask(__name__, template_folder=TEMPLATE_DIR)
 CORS(app)
 
+# Verificación de la carpeta templates en Render
+print("🔍 DEBUG: Verificando templates en Render...")
+print("📂 Template folder path:", app.template_folder)
+
+if os.path.exists(app.template_folder):
+    print("La carpeta templates EXISTE.")
+    print("Archivos en templates:", os.listdir(app.template_folder))
+else:
+    print("La carpeta templates NO existe.")
 
 @app.route("/")
 def home():
