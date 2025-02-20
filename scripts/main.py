@@ -17,7 +17,8 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "../templates")
 
 
 app = Flask(__name__, template_folder=TEMPLATE_DIR)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
+
 
 # Verificación de la carpeta templates en Render
 print("🔍 DEBUG: Verificando templates en Render...")
@@ -278,6 +279,6 @@ def generar_contrato():
 
 if __name__ == '__main__':
     import os
-    port = int(os.environ.get("PORT", 5000))  # Usa el puerto que Render asigna
+    port = int(os.environ.get("PORT", 8080)) 
     app.run(debug=True, host='0.0.0.0', port=port)
 
