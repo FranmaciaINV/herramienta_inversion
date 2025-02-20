@@ -1192,13 +1192,22 @@ function generarGraficoDemografico(canvasId, labels, values) {
     }
 
     function generarGrafico(canvasId, labels, datasets) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
+    const canvas = document.getElementById(canvasId);
+    
+    // Ajustar el tamaño del canvas para que no se expanda demasiado
+    canvas.style.width = "500px";  // 🔹 Reduce el ancho
+    canvas.style.height = "300px"; // 🔹 Reduce la altura
+
+    const ctx = canvas.getContext('2d');
     const colors = ['orange', 'red', 'blue', 'green'];
+    
     const chartData = Object.keys(datasets).map((key, index) => ({
         label: key,
         data: datasets[key],
         borderColor: colors[index],
+        borderWidth: 2,
         fill: false,
+        pointRadius: 4, // 🔹 Hace los puntos de datos más visibles
     }));
 
     new Chart(ctx, {
@@ -1210,6 +1219,7 @@ function generarGraficoDemografico(canvasId, labels, values) {
         options: {
             responsive: true,
             maintainAspectRatio: false, // Permite ajustar el tamaño manualmente
+            aspectRatio: 2, // 🔹 Controla la proporción de la gráfica para que no sea infinita
             plugins: {
                 legend: {
                     position: 'top',
@@ -1217,22 +1227,19 @@ function generarGraficoDemografico(canvasId, labels, values) {
             },
             scales: {
                 y: {
-                    beginAtZero: false, // No comienza desde 0 para evitar espacio vacío
-                    suggestedMin: Math.min(...datasets["Valor del Inmueble (€)"]) - 5000,
-                    suggestedMax: Math.max(...datasets["Valor del Inmueble (€)"]) + 5000,
+                    beginAtZero: false, // Evita que la gráfica empiece desde 0 si no es necesario
+                    min: Math.min(...datasets["Valor del Inmueble (€)"]) * 0.97, // 🔹 Margen del 3% por debajo del menor valor
+                    max: Math.max(...datasets["Valor del Inmueble (€)"]) * 1.03, // 🔹 Margen del 3% por encima del mayor valor
                     ticks: {
-                        stepSize: 10_000, // Ajusta este valor para definir los saltos (antes era 50.000)
-                        color: "#fff", // Color blanco para los números en el eje Y
-                        font: {
-                            size: 14 // Tamaño de la fuente en el eje Y
-                        }
+                        stepSize: 5000, // 🔹 Ajuste de saltos en el eje Y
+                        color: "#fff",
+                        font: { size: 14 },
                     }
                 }
             }
         }
     });
 }
-
 
     async function cargarNoticias() {
     console.log("Función cargarNoticias llamada"); // Debug
