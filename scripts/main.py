@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
-import agente_demografico
-import agente_reformas
-import agente_rentabilidad 
-import newsletter_inmobiliaria
-import broker_hipotecario
-import agente_servicios
-import agente_contratos
+import scripts.agente_demografico as agente_demografico
+import scripts.agente_reformas as agente_reformas
+import scripts.agente_rentabilidad as agente_rentabilidad
+import scripts.newsletter_inmobiliaria as newsletter_inmobiliaria
+import scripts.broker_hipotecario as broker_hipotecario
+import scripts.agente_servicios as agente_servicios
+import scripts.agente_contratos as agente_contratos
 import os
 import pandas as pd
 from flask import send_file
