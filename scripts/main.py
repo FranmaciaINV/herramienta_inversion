@@ -38,7 +38,7 @@ def home():
 # Ruta donde se guardarán los correos
 EMAILS_FILE = "emails_guardados.txt"
 
-@app.route('/guardar-email', methods=['POST'])
+@app.route('/guardar-email', methods=["GET", "POST"])
 def guardar_email():
     try:
         data = request.get_json()
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 
 # Ruta para consultas demográficas
-@app.route('/consulta-demografica', methods=['POST'])
+@app.route('/consulta-demografica', methods=["GET", "POST"])
 def consulta_demografica():
     data = request.json
     codigo_postal = data.get('codigo_postal')
@@ -140,7 +140,7 @@ def consulta_demografica():
     })
 
 # Ruta para consultas de reformas
-@app.route("/consulta-reforma", methods=["POST"])
+@app.route("/consulta-reforma", methods=["GET", "POST"])
 def consulta_reforma():
     try:
         datos = request.json
@@ -155,7 +155,7 @@ def consulta_reforma():
         return jsonify({"error": f"Error en el agente de reformas: {str(e)}"}), 500
 
 # Ruta para calcular la rentabilidad
-@app.route("/calcular-rentabilidad", methods=["POST"])
+@app.route("/calcular-rentabilidad", methods=["GET", "POST"])
 def calcular_rentabilidad():
     try:
         datos = request.json
@@ -176,7 +176,7 @@ def calcular_rentabilidad():
         return jsonify({"error": f"Error en el agente de rentabilidad: {str(e)}"}), 500
     
     # Ruta para obtener noticias inmobiliarias
-@app.route("/obtener-noticias", methods=["POST"])
+@app.route("/obtener-noticias", methods=["GET", "POST"])
 def obtener_noticias():
     try:
         noticias = newsletter_inmobiliaria.obtener_noticias_inmobiliarias()
@@ -185,7 +185,7 @@ def obtener_noticias():
         return jsonify({"error": f"Error en el agente de noticias: {str(e)}"}), 500
 
     # Ruta para el Broker Hipotecario
-@app.route("/obtener-datos", methods=["POST"])
+@app.route("/obtener-datos", methods=["GET", "POST"])
 def obtener_datos():
     try:
         tipo = request.args.get("tipo", "bancos")
@@ -199,7 +199,7 @@ def obtener_datos():
         return jsonify({"error": f"Error en el Broker Hipotecario: {str(e)}"}), 500
 
 # Ruta para obtener compañías de servicios
-@app.route("/obtener-companias", methods=["POST"])
+@app.route("/obtener-companias", methods=["GET", "POST"])
 def obtener_companias():
     """
     Unifica el funcionamiento del agente de servicios para cargar compañías.
@@ -250,7 +250,7 @@ def obtener_companias():
         return jsonify({"error": f"Error interno del servidor: {e}"}), 500
     
     # Ruta para generar el contrato
-@app.route("/generar-contrato", methods=["POST"])
+@app.route("/generar-contrato", methods=["GET", "POST"])
 def generar_contrato():
     try:
         # Obtener los datos del formulario
@@ -279,6 +279,7 @@ def generar_contrato():
 
 if __name__ == '__main__':
     import os
-    port = int(os.environ.get("PORT", 8080)) 
+    port = int(os.environ.get("PORT", 10000)) 
     app.run(debug=True, host='0.0.0.0', port=port)
+
 
