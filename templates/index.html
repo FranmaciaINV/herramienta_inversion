@@ -1286,7 +1286,7 @@ let datosBroker = []; // Almacenará los datos obtenidos del servidor
 let paginaActualBroker = 1; // Página actual
 
 async function consultarBroker(tipo) {
-    const url = `http://127.0.0.1:5000/obtener-datos?tipo=${tipo}`;
+    const url = `/obtener-datos?tipo=${tipo}`;
     const tablaResultados = document.getElementById("tabla-resultados-broker");
     const cabeceraTabla = document.getElementById("cabecera-tabla-broker");
     const cuerpoTabla = document.getElementById("cuerpo-tabla-broker");

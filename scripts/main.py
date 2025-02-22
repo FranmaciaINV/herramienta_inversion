@@ -185,14 +185,20 @@ def obtener_noticias():
         return jsonify({"error": f"Error en el agente de noticias: {str(e)}"}), 500
 
     # Ruta para el Broker Hipotecario
-@app.route("/obtener-datos", methods=["GET", "POST"])
+@app.route("/obtener-datos", methods=["GET"])
 def obtener_datos():
     try:
         tipo = request.args.get("tipo", "bancos")
         if tipo == "bancos":
-            return broker_hipotecario.bancos_data.to_json(orient="records")
+            if broker_hipotecario.bancos_data.empty:
+                return jsonify({"error": "No hay datos de bancos disponibles"}), 404
+            return jsonify(broker_hipotecario.bancos_data.to_dict(orient="records"))
+        
         elif tipo == "tasadoras":
-            return broker_hipotecario.tasadoras_data.to_json(orient="records")
+            if broker_hipotecario.tasadoras_data.empty:
+                return jsonify({"error": "No hay datos de tasadoras disponibles"}), 404
+            return jsonify(broker_hipotecario.tasadoras_data.to_dict(orient="records"))
+        
         else:
             return jsonify({"error": "Tipo no válido"}), 400
     except Exception as e:

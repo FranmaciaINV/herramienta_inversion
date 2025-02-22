@@ -6,29 +6,42 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Ruta base del proyecto
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+app = Flask(__name__)
+CORS(app)
 
-# Cargar los datos desde los archivos CSV
+# 📂 Ruta base del proyecto
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "../data")  # Asegurar la ruta a /data/
+
+# 📌 Cargar los datos desde los archivos CSV
 try:
-    bancos_data = pd.read_csv(os.path.join(BASE_DIR, 'data', 'BancosEspaña.csv'))
-    tasadoras_data = pd.read_csv(os.path.join(BASE_DIR, 'data', 'TasadorasEspaña.csv'))
+    BANCOS_FILE = os.path.join(DATA_DIR, "BancosEspaña.csv")
+    TASADORAS_FILE = os.path.join(DATA_DIR, "TasadorasEspaña.csv")
+
+    print(f"📂 Cargando bancos desde: {BANCOS_FILE}")
+    print(f"📂 Cargando tasadoras desde: {TASADORAS_FILE}")
+
+    bancos_data = pd.read_csv(BANCOS_FILE)
+    tasadoras_data = pd.read_csv(TASADORAS_FILE)
+
+    print("Bancos y tasadoras cargados correctamente")
 except Exception as e:
-    bancos_data = pd.DataFrame()  # Si hay un error, cargar un DataFrame vacío
+    print(f"ERROR al cargar los archivos CSV: {e}")
+    bancos_data = pd.DataFrame()  
     tasadoras_data = pd.DataFrame()
-    print(f"Error al cargar los archivos CSV: {e}")
 
-@app.route("/")
-def home():
-    return render_template("../tests/index.html")
-
+# 🚀 Ruta API para obtener datos de bancos y tasadoras
 @app.route("/obtener-datos", methods=["GET"])
 def obtener_datos():
     tipo = request.args.get("tipo", "bancos")
     if tipo == "bancos":
-        return bancos_data.to_json(orient="records")
+        if bancos_data.empty:
+            return jsonify({"error": "No hay datos de bancos disponibles"}), 404
+        return jsonify(bancos_data.to_dict(orient="records"))
     elif tipo == "tasadoras":
-        return tasadoras_data.to_json(orient="records")
+        if tasadoras_data.empty:
+            return jsonify({"error": "No hay datos de tasadoras disponibles"}), 404
+        return jsonify(tasadoras_data.to_dict(orient="records"))
     else:
         return jsonify({"error": "Tipo no válido"}), 400
 
