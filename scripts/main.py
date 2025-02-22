@@ -185,7 +185,7 @@ def obtener_noticias():
         return jsonify({"error": f"Error en el agente de noticias: {str(e)}"}), 500
 
     # Ruta para el Broker Hipotecario
-@app.route("/obtener-datos", methods=["GET"])
+@app.route("/obtener-datos", methods=["GET", "POST"])
 def obtener_datos():
     try:
         tipo = request.args.get("tipo", "bancos")
