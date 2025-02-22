@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin 
 import agente_demografico
 import agente_reformas
 import agente_rentabilidad
@@ -256,10 +256,10 @@ def obtener_companias():
         return jsonify({"error": f"Error interno del servidor: {e}"}), 500
     
     # Ruta para generar el contrato
-@app.route("/generar-contrato", methods=["GET", "POST"])
+@app.route("/generar-contrato", methods=["POST"])
+@cross_origin()
 def generar_contrato():
     try:
-        # Obtener los datos del formulario
         nombre_vendedor = request.form.get("nombre_vendedor", "").strip()
         nombre_comprador = request.form.get("nombre_comprador", "").strip()
         tipo_contrato = request.form.get("tipo_contrato", "").strip()
@@ -267,17 +267,21 @@ def generar_contrato():
         if not nombre_vendedor or not nombre_comprador:
             return jsonify({"error": "Faltan datos para generar el contrato"}), 400
 
-        # Solo permitimos "Contrato de Arras" por ahora
         if tipo_contrato != "arras":
             return jsonify({"error": "Este tipo de contrato aún no está disponible"}), 400
 
-        # Generar el contrato usando el agente_contratos
-        contrato_path = agente_contratos.generar_contrato_personalizado(
-            nombre_vendedor, nombre_comprador
-        )
+        contrato_filename = f"contrato_{nombre_comprador}.pdf"
+        contrato_path = os.path.join(CONTRACTS_FOLDER, contrato_filename)
 
-        # Enviar el contrato al cliente
-        return send_file(contrato_path, as_attachment=True)
+        # Generar el contrato
+        agente_contratos.generar_contrato_personalizado(nombre_vendedor, nombre_comprador, contrato_path)
+
+        if not os.path.exists(contrato_path):
+            return jsonify({"error": "No se pudo generar el contrato"}), 500
+
+        # Devuelve la URL del archivo en vez de enviarlo directamente
+        contrato_url = f"herramienta-inversion.onrender.com/static/contracts/{contrato_filename}"
+        return jsonify({"message": "Contrato generado con éxito", "url": contrato_url})
 
     except Exception as e:
         return jsonify({"error": f"Error al generar el contrato: {str(e)}"}), 500
