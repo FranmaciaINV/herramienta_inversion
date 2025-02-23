@@ -206,6 +206,23 @@ def obtener_datos():
         return jsonify({"error": f"Error en el Broker Hipotecario: {str(e)}"}), 500
 
 # Ruta para obtener compañías de servicios
+@app.route("/listar-archivos")
+def listar_archivos():
+    import os
+
+    BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+    ruta_data = os.path.abspath(os.path.join(BASE_PATH, "../data"))
+
+    if not os.path.exists(ruta_data):
+        return jsonify({"error": "La carpeta data NO existe en Render", "ruta": ruta_data})
+
+    archivos = os.listdir(ruta_data)
+
+    return jsonify({
+        "ruta_data": ruta_data,
+        "archivos_encontrados": archivos
+    })
+
 @app.route("/subir-gas", methods=["POST"])
 def subir_gas():
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
