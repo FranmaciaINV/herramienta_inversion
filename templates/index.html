@@ -1289,7 +1289,7 @@ let datosBroker = []; // Almacenará los datos obtenidos del servidor
 let paginaActualBroker = 1; // Página actual
 
 async function consultarBroker(tipo) {
-    const url = `/obtener-datos?tipo=${tipo}`;
+    const url = `https://herramienta-inversion.onrender.com/obtener-datos?tipo=${tipo}`;
     const tablaResultados = document.getElementById("tabla-resultados-broker");
     const cabeceraTabla = document.getElementById("cabecera-tabla-broker");
     const cuerpoTabla = document.getElementById("cuerpo-tabla-broker");
@@ -1298,8 +1298,10 @@ async function consultarBroker(tipo) {
         const response = await fetch(url);
         const datos = await response.json();
 
-        if (!response.ok) {
-            throw new Error(datos.error || "Error desconocido");
+        console.log("✅ Datos recibidos:", datos);
+
+        if (!Array.isArray(datos) || datos.length === 0) {
+            throw new Error("No hay datos disponibles");
         }
 
         // Almacenar los datos obtenidos
