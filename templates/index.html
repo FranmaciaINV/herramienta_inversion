@@ -499,20 +499,19 @@
     </a>
 </h2>
 <a href="#" onclick="showSection('demografia')">Estudio Demográfico</a>
-<a href="#" onclick="showSection('reformas')">Agente de Reformas</a>
-<a href="#" onclick="showSection('calculadora-rentabilidad')">Calculadora de Rentabilidad Inmobiliaria</a>
-<a href="#" onclick="showSection('broker-hipotecario')">Bancos y Tasadoras Homologadas</a>
-<a href="#" onclick="showAsistenteHipotecas()">Broker Hipotecario</a>
-<a href="#" onclick="showSection('servicios')">Compañías de Servicios</a>
-<a href="#" onclick="showBuscadorCompanias()">Buscador de Compañías</a>
-<a href="#" onclick="showSection('generador-contratos')">Generador de Contratos</a>
-<a href="#" onclick="showSection('noticias')">Newsletter Inmobiliaria</a>
-<a href="#" onclick="showSimuladorNegociaciones()">Simulador de Negociaciones</a>
- <!-- Mantenemos los demás agentes sin cambios -->
-<a href="#" onclick="showBetaSection('Decorador de Interiores', 'Este asistente analiza planos o fotos de tu vivienda y te asesora con ideas de decoración adaptadas a tus gustos y presupuesto. Además, genera imágenes 3D para visualizar cómo quedará tu hogar con las recomendaciones aplicadas.')">
-    Decorador de Interiores
-
- </nav>
+    <a href="#" onclick="showSection('reformas')">Agente de Reformas</a>
+    <a href="#" onclick="showSection('calculadora-rentabilidad')">Calculadora de Rentabilidad Inmobiliaria</a>
+    <a href="#" onclick="showSection('broker-hipotecario')">Bancos y Tasadoras Homologadas</a>
+    <a href="#" onclick="showAsistenteHipotecas()">Broker Hipotecario</a>
+    <a href="#" onclick="showSection('servicios')">Compañías de Servicios</a>
+    <a href="#" onclick="showBuscadorCompanias()">Buscador de Compañías</a>
+    <a href="#" onclick="showSection('generador-contratos')">Generador de Contratos</a>
+    <a href="#" onclick="showSection('noticias')">Newsletter Inmobiliaria</a>
+    <a href="#" onclick="showSimuladorNegociaciones()">Simulador de Negociaciones</a>
+    <a href="#" onclick="showBetaSection('Decorador de Interiores', 'Este asistente analiza planos o fotos de tu vivienda y te asesora con ideas de decoración adaptadas a tus gustos y presupuesto. Además, genera imágenes 3D para visualizar cómo quedará tu hogar con las recomendaciones aplicadas.')">
+        Decorador de Interiores
+    </a>
+</nav>
     
     <main id="main-content">
         <!-- Resumen general con indicadores inmobiliarios y económicos -->
@@ -1857,7 +1856,7 @@ function guardarEmail() {
     console.log("📌 DOM completamente cargado");
 
     // 🟠 BOTÓN "HERRAMIENTAS" → SIEMPRE LLEVA AL DASHBOARD
-    const btnHerramientas = document.querySelector("h2 a[href='#']"); // Botón de Herramientas
+    const btnHerramientas = document.querySelector("#menu-lateral h2 a"); // Botón de Herramientas
     const dashboard = document.getElementById("dashboard-summary"); // Dashboard principal
     const secciones = document.querySelectorAll("main > section"); // Todas las secciones
 
@@ -1874,12 +1873,13 @@ function guardarEmail() {
     }
 
     // 🟠 BOTONES DEL MENÚ LATERAL → ABRIR SECCIONES DIRECTAMENTE
-    const menuLinks = document.querySelectorAll("nav a"); // Todos los enlaces del menú lateral
+    const menuLinks = document.querySelectorAll("#menu-lateral a"); // Todos los enlaces del menú lateral
     menuLinks.forEach(link => {
         link.addEventListener("click", function (event) {
             event.preventDefault();
 
-            const sectionId = this.getAttribute("onclick").match(/'(.*?)'/)[1]; // Extraer el ID de la sección
+            // Obtener el ID de la sección desde el `href`
+            const sectionId = this.getAttribute("href").substring(1);
             console.log(`🔄 Clic en menú lateral: Mostrando sección ${sectionId}`);
 
             if (sectionId) {
