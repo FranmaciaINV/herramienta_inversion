@@ -212,7 +212,7 @@ def obtener_companias():
     """
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
     RUTA_LUZ = os.path.join(BASE_PATH, "../data/Compañia_Luz.csv")
-    RUTA_GAS = os.path.join(BASE_PATH, "data", "Compañia_Gas.csv")
+    RUTA_GAS = os.path.join(BASE_PATH, "../data/Compañia_Gas.csv")
     RUTA_LUZYGAS = os.path.join(BASE_PATH, "../data/Compañia_LuzyGas.csv")
 
     def leer_companias(ruta):
