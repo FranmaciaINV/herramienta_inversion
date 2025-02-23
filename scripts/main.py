@@ -206,35 +206,20 @@ def obtener_datos():
         return jsonify({"error": f"Error en el Broker Hipotecario: {str(e)}"}), 500
 
 # Ruta para obtener compañías de servicios
-@app.route("/listar-archivos")
-def listar_archivos():
+@app.route("/renombrar-archivo-gas")
+def renombrar_archivo_gas():
     import os
 
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-    ruta_data = os.path.abspath(os.path.join(BASE_PATH, "../data"))
+    ruta_actual = os.path.abspath(os.path.join(BASE_PATH, "../data/Compañia_GAS.csv"))  # Archivo con error
+    ruta_nueva = os.path.abspath(os.path.join(BASE_PATH, "../data/Compañia_Gas.csv"))  # Nombre correcto
 
-    if not os.path.exists(ruta_data):
-        return jsonify({"error": "La carpeta data NO existe en Render", "ruta": ruta_data})
+    if os.path.exists(ruta_actual):
+        os.rename(ruta_actual, ruta_nueva)
+        return jsonify({"mensaje": "Archivo renombrado correctamente", "nueva_ruta": ruta_nueva})
+    else:
+        return jsonify({"error": "El archivo Compañia_GAS.csv no existe en Render"}), 404
 
-    archivos = os.listdir(ruta_data)
-
-    return jsonify({
-        "ruta_data": ruta_data,
-        "archivos_encontrados": archivos
-    })
-
-@app.route("/subir-gas", methods=["POST"])
-def subir_gas():
-    BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-    ruta_gas = os.path.abspath(os.path.join(BASE_PATH, "../data/Compañia_Gas.csv"))
-
-    if "archivo" not in request.files:
-        return jsonify({"error": "No se ha enviado ningún archivo"}), 400
-
-    archivo = request.files["archivo"]
-    archivo.save(ruta_gas)
-
-    return jsonify({"mensaje": "Archivo Compañia_Gas.csv subido exitosamente", "ruta": ruta_gas})
 
 @app.route("/obtener-companias", methods=["GET", "POST"])
 def obtener_companias():
@@ -243,7 +228,7 @@ def obtener_companias():
     """
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
     RUTA_LUZ = os.path.join(BASE_PATH, "../data/Compañia_Luz.csv")
-    RUTA_GAS = os.path.join(BASE_PATH, "../data/Compañia_Gas.csv")
+    RUTA_GAS = os.path.join(BASE_PATH, "../data/Compañia_GAS.csv")
     RUTA_LUZYGAS = os.path.join(BASE_PATH, "../data/Compañia_LuzyGas.csv")
 
     def leer_companias(ruta):
