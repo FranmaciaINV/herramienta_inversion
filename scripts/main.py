@@ -186,6 +186,27 @@ def obtener_noticias():
         return jsonify({"error": f"Error en el agente de noticias: {str(e)}"}), 500
 
     # Ruta para el Broker Hipotecario
+@app.route("/verificar-bancos")
+def verificar_bancos():
+    import os
+    import pandas as pd
+
+    BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+    ruta_bancos = os.path.abspath(os.path.join(BASE_PATH, "../data/BancosEspaña.csv"))
+
+    if not os.path.exists(ruta_bancos):
+        return jsonify({"error": "El archivo BancosEspaña.csv NO se encuentra en Render", "ruta": ruta_bancos})
+
+    try:
+        df = pd.read_csv(ruta_bancos)
+        return jsonify({
+            "mensaje": "Archivo cargado correctamente",
+            "columnas": list(df.columns),
+            "primeros_registros": df.head(5).to_dict(orient="records")
+        })
+    except Exception as e:
+        return jsonify({"error": f"Error al leer el archivo: {str(e)}"})
+   
 @app.route("/obtener-datos", methods=["GET", "POST"])
 def obtener_datos():
     try:
