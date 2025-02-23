@@ -10,6 +10,7 @@ import agente_contratos
 import os
 import pandas as pd
 from flask import send_file
+from flask import request
 
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -205,15 +206,18 @@ def obtener_datos():
         return jsonify({"error": f"Error en el Broker Hipotecario: {str(e)}"}), 500
 
 # Ruta para obtener compañías de servicios
-@app.route("/verificar-archivos")
-def verificar_archivos():
+@app.route("/subir-gas", methods=["POST"])
+def subir_gas():
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
     ruta_gas = os.path.abspath(os.path.join(BASE_PATH, "../data/Compañia_Gas.csv"))
 
-    if os.path.exists(ruta_gas):
-        return jsonify({"mensaje": "El archivo Compañia_Gas.csv SÍ existe en Render", "ruta": ruta_gas})
-    else:
-        return jsonify({"error": "El archivo Compañia_Gas.csv NO se encuentra en Render", "ruta": ruta_gas})
+    if "archivo" not in request.files:
+        return jsonify({"error": "No se ha enviado ningún archivo"}), 400
+
+    archivo = request.files["archivo"]
+    archivo.save(ruta_gas)
+
+    return jsonify({"mensaje": "Archivo Compañia_Gas.csv subido exitosamente", "ruta": ruta_gas})
 
 @app.route("/obtener-companias", methods=["GET", "POST"])
 def obtener_companias():
