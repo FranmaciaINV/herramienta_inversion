@@ -1808,11 +1808,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    if (!localStorage.getItem("userEmail")) {
-        document.getElementById("emailPopup").style.display = "flex";
+document.addEventListener("DOMContentLoaded", function () {
+    const emailGuardado = localStorage.getItem("emailUsuario");
+
+    if (!emailGuardado) {
+        // Si no hay email en localStorage, lo pedimos al usuario
+        const emailUsuario = prompt("📩 Introduce tu email para acceder:");
+
+        if (emailUsuario) {
+            localStorage.setItem("emailUsuario", emailUsuario); // Guardar en localStorage
+        } else {
+            alert("⚠️ Debes introducir un email para continuar.");
+            location.reload(); // Recargar la página para volver a pedir el email
+        }
     }
 });
+
 
 function guardarEmail() {
     let email = document.getElementById("emailInput").value.trim();
@@ -1841,6 +1852,26 @@ function guardarEmail() {
     })
     .catch(error => console.error("Error al guardar el email:", error));
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const btnHerramientas = document.getElementById("btn-herramientas"); // Botón de Herramientas
+    const dashboard = document.getElementById("dashboard"); // Dashboard
+    const secciones = document.querySelectorAll(".seccion"); // Todas las secciones
+
+    if (btnHerramientas) {
+        btnHerramientas.addEventListener("click", function () {
+            // Ocultar todas las secciones antes de mostrar el Dashboard
+            secciones.forEach(seccion => {
+                seccion.classList.add("hidden");
+            });
+
+            // Mostrar el Dashboard
+            dashboard.classList.remove("hidden");
+        });
+    } else {
+        console.error("❌ No se encontró el botón de herramientas.");
+    }
+});
 
     document.addEventListener("DOMContentLoaded", function () {
         const botonContrato = document.querySelector("button[type='submit']");
