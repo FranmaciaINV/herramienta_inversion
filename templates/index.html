@@ -1282,20 +1282,22 @@ async function generarContrato() {
             throw new Error("Error al generar el contrato");
         }
 
-        const data = await response.json();
+        const contentType = response.headers.get("content-type");
 
-        if (data.error) {
-            throw new Error(data.error);
-        }
+if (contentType.includes("application/json")) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || "Error desconocido en el servidor");
+}
 
-        // 📥 Descargar automáticamente el archivo usando la URL generada por el backend
-        const contratoUrl = data.url; // URL devuelta por la API
-        const a = document.createElement("a");
-        a.href = contratoUrl;
-        a.download = "CONTRATO_PERSONALIZADO.docx"; // 📄 Nombre del archivo
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+// 📥 Descargar automáticamente el archivo DOCX
+const blob = await response.blob();
+const url = window.URL.createObjectURL(blob);
+const a = document.createElement("a");
+a.href = url;
+a.download = "CONTRATO_PERSONALIZADO.docx"; // 📄 Nombre del archivo
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
     } catch (error) {
         console.error("⚠️ Error:", error);
         alert("❌ Hubo un problema al generar el contrato.");
