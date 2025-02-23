@@ -1298,10 +1298,11 @@ async function consultarBroker(tipo) {
         const response = await fetch(url);
         const datos = await response.json();
 
-        console.log("✅ Datos recibidos:", datos);
+        console.log("🔍 Respuesta de la API:", datos);  // 🔹 Depuración: Ver los datos en la consola
 
-        if (!Array.isArray(datos) || datos.length === 0) {
-            throw new Error("No hay datos disponibles");
+        // Si los datos están vacíos, muestra un mensaje
+        if (!datos || datos.length === 0) {
+            throw new Error("No hay datos disponibles.");
         }
 
         // Almacenar los datos obtenidos
@@ -1309,11 +1310,12 @@ async function consultarBroker(tipo) {
         paginaActualBroker = 1; // Reiniciar a la primera página
         mostrarPaginaBroker(); // Mostrar la primera página
     } catch (error) {
-        console.error("Error al obtener los datos:", error.message);
+        console.error("⚠️ Error al obtener los datos:", error.message);
         cabeceraTabla.innerHTML = "<th>Error al cargar los datos</th>";
         cuerpoTabla.innerHTML = "";
     }
 }
+
 
 function mostrarPaginaBroker() {
     const tablaResultados = document.getElementById("tabla-resultados-broker");
