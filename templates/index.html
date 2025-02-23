@@ -494,43 +494,25 @@
 </div>
 
 <h2>
-    <a href="#" id="btn-herramientas" style="color: #fff; text-decoration: none;">
+    <a href="#" onclick="showSection('default-summary')" style="color: #fff; text-decoration: none;">
         Herramientas
     </a>
 </h2>
-
-<a href="#" class="boton-dashboard" data-target="demografia">Estudio Demográfico</a>
-<a href="#" class="boton-dashboard" data-target="reformas">Agente de Reformas</a>
-<a href="#" class="boton-dashboard" data-target="calculadora-rentabilidad">Calculadora de Rentabilidad Inmobiliaria</a>
-<a href="#" class="boton-dashboard" data-target="broker-hipotecario">Bancos y Tasadoras Homologadas</a>
+<a href="#" onclick="showSection('demografia')">Estudio Demográfico</a>
+<a href="#" onclick="showSection('reformas')">Agente de Reformas</a>
+<a href="#" onclick="showSection('calculadora-rentabilidad')">Calculadora de Rentabilidad Inmobiliaria</a>
+<a href="#" onclick="showSection('broker-hipotecario')">Bancos y Tasadoras Homologadas</a>
 <a href="#" onclick="showAsistenteHipotecas()">Broker Hipotecario</a>
-<a href="#" class="boton-dashboard" data-target="servicios">Compañías de Servicios</a>
+<a href="#" onclick="showSection('servicios')">Compañías de Servicios</a>
 <a href="#" onclick="showBuscadorCompanias()">Buscador de Compañías</a>
-<a href="#" class="boton-dashboard" data-target="generador-contratos">Generador de Contratos</a>
-<a href="#" class="boton-dashboard" data-target="noticias">Newsletter Inmobiliaria</a>
+<a href="#" onclick="showSection('generador-contratos')">Generador de Contratos</a>
+<a href="#" onclick="showSection('noticias')">Newsletter Inmobiliaria</a>
 <a href="#" onclick="showSimuladorNegociaciones()">Simulador de Negociaciones</a>
-
-<a href="#" class="boton-dashboard" data-target="decorador-interiores">
+ <!-- Mantenemos los demás agentes sin cambios -->
+<a href="#" onclick="showBetaSection('Decorador de Interiores', 'Este asistente analiza planos o fotos de tu vivienda y te asesora con ideas de decoración adaptadas a tus gustos y presupuesto. Además, genera imágenes 3D para visualizar cómo quedará tu hogar con las recomendaciones aplicadas.')">
     Decorador de Interiores
-</a>
 
-<!-- Contenedor de Dashboard -->
-<div id="dashboard">
-    <h3>Bienvenido al Dashboard</h3>
-</div>
-
-<!-- Secciones individuales -->
-<section id="demografia" class="seccion hidden">Contenido del Estudio Demográfico</section>
-<section id="reformas" class="seccion hidden">Contenido del Agente de Reformas</section>
-<section id="calculadora-rentabilidad" class="seccion hidden">Contenido de la Calculadora</section>
-<section id="broker-hipotecario" class="seccion hidden">Contenido del Broker Hipotecario</section>
-<section id="servicios" class="seccion hidden">Contenido de Compañías de Servicios</section>
-<section id="generador-contratos" class="seccion hidden">Contenido del Generador de Contratos</section>
-<section id="noticias" class="seccion hidden">Contenido de Noticias</section>
-<section id="decorador-interiores" class="seccion hidden">Contenido del Decorador de Interiores</section>
-
-                   
-    </nav>
+ </nav>
     
     <main id="main-content">
         <!-- Resumen general con indicadores inmobiliarios y económicos -->
