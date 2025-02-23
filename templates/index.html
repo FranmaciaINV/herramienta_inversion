@@ -1885,6 +1885,31 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("❌ No se encontró el botón de generar contrato");
         }
     });
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const dashboard = document.getElementById("dashboard"); // El dashboard principal
+    const secciones = document.querySelectorAll(".seccion"); // Todas las secciones que pueden mostrarse
+    const botonesDashboard = document.querySelectorAll(".boton-dashboard"); // Todos los botones del dashboard
+
+    if (botonesDashboard.length > 0) {
+        botonesDashboard.forEach(boton => {
+            boton.addEventListener("click", function () {
+                const target = this.getAttribute("data-target"); // Obtener la sección a mostrar
+                
+                if (target) {
+                    // Ocultar todas las secciones antes de mostrar la seleccionada
+                    secciones.forEach(seccion => seccion.classList.add("hidden"));
+                    
+                    // Mostrar la sección seleccionada
+                    document.getElementById(target).classList.remove("hidden");
+                }
+            });
+        });
+    } else {
+        console.error("❌ No se encontraron botones en el Dashboard.");
+    }
+});
+
 </script>
 
     </script>
