@@ -491,40 +491,45 @@
     </style>
 </head>
 <body>
-    <nav>
-       <!-- POPUP DE EMAIL -->
-<div id="emailPopup" class="popup">
-    <div class="popup-content">
-        <h2>HERRAMIENTA INVERSIÓN INMOBILIARIA</h2>
-        <p>Introduce tu email para acceder:</p>
-        <input type="email" id="emailInput" placeholder="Tu email aquí..." required>
-        <button onclick="guardarEmail()">Acceder</button>
-    </div>
-</div>
- 
 </div>
 
-        <h2>
-            <a href="#" onclick="showSection('default-summary')" style="color: #fff; text-decoration: none;">
-                Herramientas
-            </a>
-        </h2>
-        <a href="#" onclick="showSection('demografia')">Estudio Demográfico</a>
-        <a href="#" onclick="showSection('reformas')">Agente de Reformas</a>
-        <a href="#" onclick="showSection('calculadora-rentabilidad')">Calculadora de Rentabilidad Inmobiliaria</a>
-        <a href="#" onclick="showSection('broker-hipotecario')">Bancos y Tasadoras Homologadas</a>
-        <a href="#" onclick="showAsistenteHipotecas()">Broker Hipotecario</a>
-        <a href="#" onclick="showSection('servicios')">Compañías de Servicios</a>
-        <a href="#" onclick="showBuscadorCompanias()">Buscador de Compañías</a>
-        <a href="#" onclick="showSection('generador-contratos')">Generador de Contratos</a>
-        <a href="#" onclick="showSection('noticias')">Newsletter Inmobiliaria</a>
-        <a href="#" onclick="showSimuladorNegociaciones()">Simulador de Negociaciones</a>
-         <!-- Mantenemos los demás agentes sin cambios -->
-        <a href="#" onclick="showBetaSection('Decorador de Interiores', 'Este asistente analiza planos o fotos de tu vivienda y te asesora con ideas de decoración adaptadas a tus gustos y presupuesto. Además, genera imágenes 3D para visualizar cómo quedará tu hogar con las recomendaciones aplicadas.')">
-            Decorador de Interiores
-        </a>
-        
-               
+<h2>
+    <a href="#" id="btn-herramientas" style="color: #fff; text-decoration: none;">
+        Herramientas
+    </a>
+</h2>
+
+<a href="#" class="boton-dashboard" data-target="demografia">Estudio Demográfico</a>
+<a href="#" class="boton-dashboard" data-target="reformas">Agente de Reformas</a>
+<a href="#" class="boton-dashboard" data-target="calculadora-rentabilidad">Calculadora de Rentabilidad Inmobiliaria</a>
+<a href="#" class="boton-dashboard" data-target="broker-hipotecario">Bancos y Tasadoras Homologadas</a>
+<a href="#" onclick="showAsistenteHipotecas()">Broker Hipotecario</a>
+<a href="#" class="boton-dashboard" data-target="servicios">Compañías de Servicios</a>
+<a href="#" onclick="showBuscadorCompanias()">Buscador de Compañías</a>
+<a href="#" class="boton-dashboard" data-target="generador-contratos">Generador de Contratos</a>
+<a href="#" class="boton-dashboard" data-target="noticias">Newsletter Inmobiliaria</a>
+<a href="#" onclick="showSimuladorNegociaciones()">Simulador de Negociaciones</a>
+
+<a href="#" class="boton-dashboard" data-target="decorador-interiores">
+    Decorador de Interiores
+</a>
+
+<!-- Contenedor de Dashboard -->
+<div id="dashboard">
+    <h3>Bienvenido al Dashboard</h3>
+</div>
+
+<!-- Secciones individuales -->
+<section id="demografia" class="seccion hidden">Contenido del Estudio Demográfico</section>
+<section id="reformas" class="seccion hidden">Contenido del Agente de Reformas</section>
+<section id="calculadora-rentabilidad" class="seccion hidden">Contenido de la Calculadora</section>
+<section id="broker-hipotecario" class="seccion hidden">Contenido del Broker Hipotecario</section>
+<section id="servicios" class="seccion hidden">Contenido de Compañías de Servicios</section>
+<section id="generador-contratos" class="seccion hidden">Contenido del Generador de Contratos</section>
+<section id="noticias" class="seccion hidden">Contenido de Noticias</section>
+<section id="decorador-interiores" class="seccion hidden">Contenido del Decorador de Interiores</section>
+
+                   
     </nav>
     
     <main id="main-content">
@@ -1853,26 +1858,6 @@ function guardarEmail() {
     .catch(error => console.error("Error al guardar el email:", error));
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const btnHerramientas = document.getElementById("btn-herramientas"); // Botón de Herramientas
-    const dashboard = document.getElementById("dashboard"); // Dashboard
-    const secciones = document.querySelectorAll(".seccion"); // Todas las secciones
-
-    if (btnHerramientas) {
-        btnHerramientas.addEventListener("click", function () {
-            // Ocultar todas las secciones antes de mostrar el Dashboard
-            secciones.forEach(seccion => {
-                seccion.classList.add("hidden");
-            });
-
-            // Mostrar el Dashboard
-            dashboard.classList.remove("hidden");
-        });
-    } else {
-        console.error("❌ No se encontró el botón de herramientas.");
-    }
-});
-
     document.addEventListener("DOMContentLoaded", function () {
         const botonContrato = document.querySelector("button[type='submit']");
         
@@ -1887,10 +1872,25 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document.addEventListener("DOMContentLoaded", function () {
-    const dashboard = document.getElementById("dashboard"); // El dashboard principal
+    const btnHerramientas = document.getElementById("btn-herramientas"); // Botón de Herramientas
+    const dashboard = document.getElementById("dashboard"); // Dashboard principal
     const secciones = document.querySelectorAll(".seccion"); // Todas las secciones que pueden mostrarse
     const botonesDashboard = document.querySelectorAll(".boton-dashboard"); // Todos los botones del dashboard
 
+    // ⬇⬇⬇ 1️⃣ CUANDO PINCHEN EN "HERRAMIENTAS" SE MUESTRA EL DASHBOARD ⬇⬇⬇
+    if (btnHerramientas) {
+        btnHerramientas.addEventListener("click", function () {
+            // Ocultar todas las secciones
+            secciones.forEach(seccion => seccion.classList.add("hidden"));
+
+            // Mostrar el Dashboard
+            dashboard.classList.remove("hidden");
+        });
+    } else {
+        console.error("❌ No se encontró el botón de Herramientas.");
+    }
+
+    // ⬇⬇⬇ 2️⃣ HACER QUE TODOS LOS BOTONES DEL DASHBOARD FUNCIONEN DESDE EL INICIO ⬇⬇⬇
     if (botonesDashboard.length > 0) {
         botonesDashboard.forEach(boton => {
             boton.addEventListener("click", function () {
@@ -1899,9 +1899,62 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (target) {
                     // Ocultar todas las secciones antes de mostrar la seleccionada
                     secciones.forEach(seccion => seccion.classList.add("hidden"));
-                    
-                    // Mostrar la sección seleccionada
-                    document.getElementById(target).classList.remove("hidden");
+
+                    // Mostrar la sección correspondiente al botón que se ha pinchado
+                    const seccionAMostrar = document.getElementById(target);
+                    if (seccionAMostrar) {
+                        seccionAMostrar.classList.remove("hidden");
+                    } else {
+                        console.error(`❌ No se encontró la sección con ID: ${target}`);
+                    }
+                }
+            });
+        });
+    } else {
+        console.error("❌ No se encontraron botones en el Dashboard.");
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const btnHerramientas = document.getElementById("btn-herramientas"); // Botón de Herramientas
+    const dashboard = document.getElementById("dashboard"); // Dashboard principal
+    const secciones = document.querySelectorAll(".seccion"); // Todas las secciones que pueden mostrarse
+    const botonesDashboard = document.querySelectorAll(".boton-dashboard"); // Todos los botones del dashboard
+
+    // ✅ 1️⃣ CUANDO PINCHEN EN "HERRAMIENTAS" SE MUESTRA EL DASHBOARD
+    if (btnHerramientas) {
+        btnHerramientas.addEventListener("click", function (event) {
+            event.preventDefault(); // Evita el comportamiento por defecto del enlace
+
+            // Ocultar todas las secciones
+            secciones.forEach(seccion => seccion.classList.add("hidden"));
+
+            // Mostrar el Dashboard
+            dashboard.classList.remove("hidden");
+        });
+    } else {
+        console.error("❌ No se encontró el botón de Herramientas.");
+    }
+
+    // ✅ 2️⃣ HACER QUE TODOS LOS BOTONES DEL DASHBOARD FUNCIONEN DESDE EL INICIO
+    if (botonesDashboard.length > 0) {
+        botonesDashboard.forEach(boton => {
+            boton.addEventListener("click", function (event) {
+                event.preventDefault(); // Evita saltos en la página
+
+                const target = this.getAttribute("data-target"); // Obtener la sección a mostrar
+                
+                if (target) {
+                    // Ocultar todas las secciones antes de mostrar la seleccionada
+                    secciones.forEach(seccion => seccion.classList.add("hidden"));
+
+                    // Mostrar la sección correspondiente al botón que se ha pinchado
+                    const seccionAMostrar = document.getElementById(target);
+                    if (seccionAMostrar) {
+                        seccionAMostrar.classList.remove("hidden");
+                    } else {
+                        console.error(`❌ No se encontró la sección con ID: ${target}`);
+                    }
                 }
             });
         });
