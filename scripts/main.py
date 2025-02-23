@@ -205,6 +205,16 @@ def obtener_datos():
         return jsonify({"error": f"Error en el Broker Hipotecario: {str(e)}"}), 500
 
 # Ruta para obtener compañías de servicios
+@app.route("/verificar-archivos")
+def verificar_archivos():
+    BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+    ruta_gas = os.path.abspath(os.path.join(BASE_PATH, "../data/Compañia_Gas.csv"))
+
+    if os.path.exists(ruta_gas):
+        return jsonify({"mensaje": "El archivo Compañia_Gas.csv SÍ existe en Render", "ruta": ruta_gas})
+    else:
+        return jsonify({"error": "El archivo Compañia_Gas.csv NO se encuentra en Render", "ruta": ruta_gas})
+
 @app.route("/obtener-companias", methods=["GET", "POST"])
 def obtener_companias():
     """
