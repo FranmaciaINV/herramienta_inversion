@@ -1243,6 +1243,46 @@ function generarGraficoDemografico(canvasId, labels, values) {
     });
 }
 
+async function generarContrato() {
+    const nombreVendedor = document.getElementById("nombre-vendedor").value.trim();
+    const nombreComprador = document.getElementById("nombre-comprador").value.trim();
+    const tipoContrato = "arras";
+
+    if (!nombreVendedor || !nombreComprador) {
+        alert("⚠️ Por favor, ingresa los nombres del vendedor y comprador.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("nombre_vendedor", nombreVendedor);
+    formData.append("nombre_comprador", nombreComprador);
+    formData.append("tipo_contrato", tipoContrato);
+
+    try {
+        const response = await fetch("https://herramienta-inversion.onrender.com/generar-contrato", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error("Error al generar el contrato");
+        }
+
+        // Descargar el archivo automáticamente
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "CONTRATO_PERSONALIZADO.docx";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } catch (error) {
+        console.error("⚠️ Error:", error);
+        alert("❌ Hubo un problema al generar el contrato.");
+    }
+}
+
 async function descargarContrato() {
     try {
         const formData = new FormData();
