@@ -824,7 +824,7 @@
         <!-- Generador de Contratos -->
 <section id="generador-contratos" class="hidden">
     <h2>Generador de Contratos</h2>
-    <form method="POST" action="herramienta-inversion.onrender.com/generar-contrato">
+    <form id="contrato-form">
         
         <!-- Selector de tipo de contrato -->
         <div style="margin-bottom: 20px;">
@@ -1243,9 +1243,23 @@ function generarGraficoDemografico(canvasId, labels, values) {
     });
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+    const botonContrato = document.querySelector("button[type='submit']");
+    
+    if (botonContrato) {
+        botonContrato.addEventListener("click", function (event) {
+            event.preventDefault(); // ⛔ Evita que el formulario se envíe y abra la URL
+
+            generarContrato(); // 📄 Llama a la función para generar y descargar el contrato
+        });
+    } else {
+        console.error("❌ No se encontró el botón de generar contrato");
+    }
+});
+
 async function generarContrato() {
-    const nombreVendedor = document.getElementById("nombre-vendedor").value.trim();
-    const nombreComprador = document.getElementById("nombre-comprador").value.trim();
+    const nombreVendedor = document.getElementById("nombre_vendedor").value.trim();
+    const nombreComprador = document.getElementById("nombre_comprador").value.trim();
     const tipoContrato = "arras";
 
     if (!nombreVendedor || !nombreComprador) {
@@ -1268,12 +1282,17 @@ async function generarContrato() {
             throw new Error("Error al generar el contrato");
         }
 
-        // Descargar el archivo automáticamente
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+        const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        // 📥 Descargar automáticamente el archivo usando la URL generada por el backend
+        const contratoUrl = data.url; // URL devuelta por la API
         const a = document.createElement("a");
-        a.href = url;
-        a.download = "CONTRATO_PERSONALIZADO.docx";
+        a.href = contratoUrl;
+        a.download = "CONTRATO_PERSONALIZADO.docx"; // 📄 Nombre del archivo
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -1282,37 +1301,6 @@ async function generarContrato() {
         alert("❌ Hubo un problema al generar el contrato.");
     }
 }
-
-async function descargarContrato() {
-    try {
-        const formData = new FormData();
-        formData.append("nombre_vendedor", "Juan Pérez");
-        formData.append("nombre_comprador", "María Gómez");
-        formData.append("tipo_contrato", "arras");
-
-        const response = await fetch("https://herramienta-inversion.onrender.com/generar-contrato", {
-            method: "POST",
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error("No se pudo generar el contrato");
-        }
-
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "Contrato.pdf";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    } catch (error) {
-        console.error("Error al descargar el contrato:", error);
-    }
-}
-
 
     async function cargarNoticias() {
     console.log("Función cargarNoticias llamada"); // Debug
@@ -1852,6 +1840,19 @@ function guardarEmail() {
     .catch(error => console.error("Error al guardar el email:", error));
 }
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const botonContrato = document.querySelector("button[type='submit']");
+        
+        if (botonContrato) {
+            botonContrato.addEventListener("click", function (event) {
+                event.preventDefault(); // ⛔ Evita que se recargue la página
+                generarContrato(); // 📄 Llama a la función para generar el contrato
+            });
+        } else {
+            console.error("❌ No se encontró el botón de generar contrato");
+        }
+    });
+</script>
 
     </script>
 </body>

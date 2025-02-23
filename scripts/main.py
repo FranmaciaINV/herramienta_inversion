@@ -319,15 +319,14 @@ def generar_contrato():
         if tipo_contrato != "arras":
             return jsonify({"error": "Este tipo de contrato aún no está disponible"}), 400
 
-        # Generar el contrato personalizado
-        agente_contratos.generar_contrato_personalizado(nombre_vendedor, nombre_comprador)
+        # Generar el contrato usando la función de agente_contratos
+        contrato_path = agente_contratos.generar_contrato_personalizado(nombre_vendedor, nombre_comprador)
 
-        # Verificar si el contrato fue generado correctamente
-        if not os.path.exists(CONTRATO_PERSONALIZADO):
+        if not os.path.exists(contrato_path):
             return jsonify({"error": "No se pudo generar el contrato"}), 500
 
-        # Enviar el archivo directamente para descarga
-        return send_file(CONTRATO_PERSONALIZADO, as_attachment=True)
+        # Enviar el archivo directamente como respuesta
+        return send_file(contrato_path, as_attachment=True, download_name="Contrato_Arras.docx")
 
     except Exception as e:
         return jsonify({"error": f"Error al generar el contrato: {str(e)}"}), 500
