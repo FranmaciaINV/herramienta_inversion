@@ -2,6 +2,7 @@ from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 import pandas as pd
 import os
+import json
 
 app = Flask(__name__)
 CORS(app)
@@ -31,17 +32,37 @@ except Exception as e:
     tasadoras_data = pd.DataFrame()
 
 # 🚀 Ruta API para obtener datos de bancos y tasadoras
+
+
 @app.route("/obtener-datos", methods=["GET"])
 def obtener_datos():
     tipo = request.args.get("tipo", "bancos")
     if tipo == "bancos":
         if bancos_data.empty:
             return jsonify({"error": "No hay datos de bancos disponibles"}), 404
-        return jsonify(bancos_data.to_dict(orient="records"))
+        
+        # Convertir NaN en None (para que JSON lo entienda como null)
+        bancos_data_clean = bancos_data.where(pd.notna(bancos_data), None)
+        
+        return jsonify(bancos_data_clean.to_dict(orient="records"))
+
+        # 📌 Depuración: Ver los primeros registros en logs
+        print("🔍 Datos de bancos que se enviarán:")
+        print(json.dumps(bancos_limpios[:5], indent=2, ensure_ascii=False))  # Solo los primeros 5 registros
+
+        return jsonify(bancos_limpios)
+
     elif tipo == "tasadoras":
         if tasadoras_data.empty:
             return jsonify({"error": "No hay datos de tasadoras disponibles"}), 404
-        return jsonify(tasadoras_data.to_dict(orient="records"))
+
+        tasadoras_limpias = tasadoras_data.where(pd.notna(tasadoras_data), None).to_dict(orient="records")
+
+        print("🔍 Datos de tasadoras que se enviarán:")
+        print(json.dumps(tasadoras_limpias[:5], indent=2, ensure_ascii=False))
+
+        return jsonify(tasadoras_limpias)
+
     else:
         return jsonify({"error": "Tipo no válido"}), 400
 

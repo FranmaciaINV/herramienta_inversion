@@ -9,6 +9,7 @@ import agente_servicios
 import agente_contratos
 import os
 import pandas as pd
+import numpy as np
 from flask import send_file
 from flask import request
 
@@ -211,15 +212,24 @@ def verificar_bancos():
 def obtener_datos():
     try:
         tipo = request.args.get("tipo", "bancos")
+
         if tipo == "bancos":
             if broker_hipotecario.bancos_data.empty:
                 return jsonify({"error": "No hay datos de bancos disponibles"}), 404
-            return jsonify(broker_hipotecario.bancos_data.to_dict(orient="records"))
+
+            # 🔴 Convertimos NaN a None en TODA la tabla antes de enviar JSON
+            bancos_data_clean = broker_hipotecario.bancos_data.replace({np.nan: None}).to_dict(orient="records")
+
+            return jsonify(bancos_data_clean)
         
         elif tipo == "tasadoras":
             if broker_hipotecario.tasadoras_data.empty:
                 return jsonify({"error": "No hay datos de tasadoras disponibles"}), 404
-            return jsonify(broker_hipotecario.tasadoras_data.to_dict(orient="records"))
+            
+            # 🔴 Convertimos NaN a None en TODA la tabla
+            tasadoras_data_clean = broker_hipotecario.tasadoras_data.replace({np.nan: None}).to_dict(orient="records")
+
+            return jsonify(tasadoras_data_clean)
         
         else:
             return jsonify({"error": "Tipo no válido"}), 400
