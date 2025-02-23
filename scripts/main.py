@@ -17,6 +17,8 @@ from flask import request
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "../templates")
 
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+CONTRATO_PERSONALIZADO = os.path.join(BASE_PATH, "../data/CONTRATO_PERSONALIZADO.docx")
 
 app = Flask(__name__, template_folder=TEMPLATE_DIR)
 CORS(app, resources={r"/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
@@ -317,18 +319,15 @@ def generar_contrato():
         if tipo_contrato != "arras":
             return jsonify({"error": "Este tipo de contrato aún no está disponible"}), 400
 
-        contrato_filename = f"contrato_{nombre_comprador}.pdf"
-        contrato_path = os.path.join(CONTRACTS_FOLDER, contrato_filename)
+        # Generar el contrato personalizado
+        agente_contratos.generar_contrato_personalizado(nombre_vendedor, nombre_comprador)
 
-        # Generar el contrato
-        agente_contratos.generar_contrato_personalizado(nombre_vendedor, nombre_comprador, contrato_path)
-
-        if not os.path.exists(contrato_path):
+        # Verificar si el contrato fue generado correctamente
+        if not os.path.exists(CONTRATO_PERSONALIZADO):
             return jsonify({"error": "No se pudo generar el contrato"}), 500
 
-        # Devuelve la URL del archivo en vez de enviarlo directamente
-        contrato_url = f"herramienta-inversion.onrender.com/static/contracts/{contrato_filename}"
-        return jsonify({"message": "Contrato generado con éxito", "url": contrato_url})
+        # Enviar el archivo directamente para descarga
+        return send_file(CONTRATO_PERSONALIZADO, as_attachment=True)
 
     except Exception as e:
         return jsonify({"error": f"Error al generar el contrato: {str(e)}"}), 500

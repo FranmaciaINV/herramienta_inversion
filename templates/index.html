@@ -1243,6 +1243,36 @@ function generarGraficoDemografico(canvasId, labels, values) {
     });
 }
 
+async function descargarContrato() {
+    try {
+        const formData = new FormData();
+        formData.append("nombre_vendedor", "Juan Pérez");
+        formData.append("nombre_comprador", "María Gómez");
+        formData.append("tipo_contrato", "arras");
+
+        const response = await fetch("https://herramienta-inversion.onrender.com/generar-contrato", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error("No se pudo generar el contrato");
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "Contrato.pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } catch (error) {
+        console.error("Error al descargar el contrato:", error);
+    }
+}
+
 
     async function cargarNoticias() {
     console.log("Función cargarNoticias llamada"); // Debug
