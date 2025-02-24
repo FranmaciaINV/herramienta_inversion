@@ -30,64 +30,92 @@
 
         nav h2 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-bottom: 1px solid white;
-            padding-bottom: 10px;
+            padding-bottom: 9px;
+            color: white;
         }
 
         nav a {
             color: white;
             text-decoration: none;
-            font-size: 21px;
+            font-size: 20px;
             display: block;
-            margin: 15px 0;
+            margin: 10px 0;
+            padding: 5px 10px;
             transition: color 0.3s, text-shadow 0.3s;
         }
 
         nav a:hover {
             color: #fff; /* Naranja oscuro */
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
-        }
-
-        /* Área principal */
-        main {
-            flex: 1;
-            padding: 20px;
-            background-color: #222; /* Fondo gris oscuro */
-        }
-
-        h2 {
-            color: #ff7300; /* Títulos naranjas */
-        }
-
-        label, input, button {
-            display: block;
-            width: 100%;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        input {
-            padding: 10px;
-            border: none;
+            padding: 5px;
             border-radius: 5px;
-            background-color: #333; /* Fondo del input gris oscuro */
-            color: white;
         }
 
-        button {
-            background-color: #ff7300; /* Botón naranja */
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+        /* Ajuste del contenido principal para que no quede cortado */
+main {
+    flex: 1;
+    padding: 30px; /* Aumentar padding para dar más espacio */
+    background-color: #222; /* Mantener el fondo gris oscuro */
+    margin-left: 250px; /* Asegurar que el contenido no quede sobre el menú */
+    min-height: 100vh; /* Que el contenido ocupe toda la pantalla */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrar el contenido horizontalmente */
+    justify-content: flex-start; /* Asegurar que el contenido empieza desde arriba */
+}
 
-        button:hover {
-            background-color: #ff5200; /* Botón naranja oscuro */
-        }
+/* Ajustar las secciones internas */
+section {
+    width: 100%;
+    max-width: 1100px; /* Limitar el ancho máximo */
+    padding: 20px;
+    background-color: #333; /* Fondo oscuro para separar las secciones */
+    border-radius: 8px;
+}
+
+/* Corregir los checkboxes y labels para que se alineen mejor */
+label {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Separación entre el texto y el checkbox */
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2); /* Hacer los checkboxes más visibles */
+    margin-right: 5px;
+}
+
+/* Ajustar el botón de "Consultar" para que se vea centrado y bien alineado */
+button {
+    width: 100%;
+    max-width: 300px;
+    background-color: #ff7300; /* Mantener el color naranja */
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 18px;
+    text-align: center;
+    display: block;
+    margin: 20px auto; /* Centrar el botón */
+}
+
+button:hover {
+    background-color: #ff5200; /* Botón naranja más oscuro al pasar el cursor */
+}
+
+/* Ajustar el texto de advertencia para que no se vea cortado */
+.additional-info {
+    text-align: center;
+    font-size: 14px;
+    color: #ccc;
+    max-width: 80%;
+    margin: 20px auto;
+}
 
         /* Contenedor de métricas */
     .metrics-container {
@@ -482,14 +510,14 @@
 .popup-content button:hover {
     background-color: #ff5200;
 }
-
     </style>
 </head>
 <body>
 </div>
 
+<nav>
 <h2>
-    <a href="#" onclick="showSection('default-summary')" style="color: #fff; text-decoration: none;">
+    <a href="#" onclick="showDashboard()" style="color: #fff; text-decoration: none;">
         Herramientas
     </a>
 </h2>
@@ -508,6 +536,16 @@
     </a>
 </nav>
     
+<!-- Popup de Email -->
+<div id="emailPopup" class="popup">
+    <div class="popup-content">
+        <h2>HERRAMIENTA INVERSIÓN INMOBILIARIA</h2>
+        <p>Introduce tu email para acceder:</p>
+        <input type="email" id="emailInput" placeholder="Tu email aquí...">
+        <button onclick="guardarEmail()">Acceder</button>
+    </div>
+</div>
+
     <main id="main-content">
         <!-- Resumen general con indicadores inmobiliarios y económicos -->
         <section id="dashboard-summary">
@@ -867,33 +905,27 @@
     });
 
     function showSection(sectionId) {
-    // Ocultar todas las secciones excepto el dashboard-summary
+    // Ocultar todas las secciones excepto el dashboard
     const sections = document.querySelectorAll("main > section");
     sections.forEach(section => {
-        if (section.id !== "dashboard-summary") { 
-            section.classList.add("hidden");
-        }
+        section.classList.add("hidden");
     });
 
     // Mostrar la sección seleccionada
-    if (sectionId) {
-        const selectedSection = document.getElementById(sectionId);
-        if (selectedSection) {
-            selectedSection.classList.remove("hidden");
-
-            // Cargar noticias si la sección seleccionada es "noticias"
-            if (sectionId === "noticias") {
-                console.log("Cargando noticias...");
-                cargarNoticias();
-            }
-        } else {
-            console.error(`No se encontró la sección con el ID: ${sectionId}`);
-        }
+    const selectedSection = document.getElementById(sectionId);
+    if (selectedSection) {
+        selectedSection.classList.remove("hidden");
+    } else {
+        console.error(`No se encontró la sección con el ID: ${sectionId}`);
     }
 }
 
+function showDashboard() {
+    showSection('dashboard-summary'); 
+}
 
-    
+
+
 function showBetaSection(agent, description) {
     // Ocultar todas las secciones
     const sections = document.querySelectorAll("main > section");
@@ -1769,10 +1801,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const dashboard = document.getElementById("dashboard-summary");
     
     if (dashboard) {
-        dashboard.classList.remove("hidden"); // Asegurar que el dashboard es visible
+        dashboard.classList.remove("hidden"); // 🔹 Asegurar que el dashboard es visible
     }
 
-    // Ocultar todas las demás secciones excepto el dashboard
+    // 🔹 Ocultar todas las demás secciones excepto el dashboard
     const sections = document.querySelectorAll("main > section");
     sections.forEach(section => {
         if (section.id !== "dashboard-summary") {
@@ -1790,21 +1822,70 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("📌 DOM completamente cargado");
+
+    // 🔹 Verificar si el email ya está almacenado
+    const emailGuardado = localStorage.getItem("emailUsuario");
+    if (!emailGuardado) {
+        // 🔹 Mostrar popup si no hay email guardado
+        document.getElementById("emailPopup").style.display = "flex";
+    } else {
+        document.getElementById("emailPopup").style.display = "none";
+    }
+
+    // 🔹 Mostrar por defecto el dashboard de resumen
+    showSection('dashboard-summary');
+});
+
+function guardarEmail() {
+    let email = document.getElementById("emailInput").value.trim();
+    
+    if (email === "" || !email.includes("@")) {
+        alert("Por favor, introduce un email válido.");
+        return;
+    }
+
+    // Guardar el email en localStorage
+    localStorage.setItem("emailUsuario", email);
+
+    // Ocultar el popup
+    document.getElementById("emailPopup").style.display = "none";
+
+    // Enviar el email al backend
+    fetch("https://herramienta-inversion.onrender.com/guardar-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("📩 Respuesta del backend:", data);
+        alert("Correo guardado correctamente.");
+    })
+    .catch(error => console.error("⚠️ Error al guardar el email:", error));
+}
+
+function showDashboard() {
+    // Ocultar todas las secciones excepto el dashboard
+    const sections = document.querySelectorAll("main > section");
+    sections.forEach(section => section.classList.add("hidden"));
+
+    // Mostrar el dashboard-summary
+    const dashboard = document.getElementById("dashboard-summary");
+    if (dashboard) {
+        dashboard.classList.remove("hidden");
+    } else {
+        console.error("No se encontró la sección del Dashboard.");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
     const emailGuardado = localStorage.getItem("emailUsuario");
 
     if (!emailGuardado) {
-        // Si no hay email en localStorage, lo pedimos al usuario
-        const emailUsuario = prompt("📩 Introduce tu email para acceder:");
-
-        if (emailUsuario) {
-            localStorage.setItem("emailUsuario", emailUsuario); // Guardar en localStorage
-        } else {
-            alert("⚠️ Debes introducir un email para continuar.");
-            location.reload(); // Recargar la página para volver a pedir el email
-        }
+        document.getElementById("emailPopup").style.display = "flex";
     }
 });
-
 
 function guardarEmail() {
     let email = document.getElementById("emailInput").value.trim();
@@ -1815,13 +1896,13 @@ function guardarEmail() {
     }
 
     // Guardamos el email en localStorage para evitar que vuelva a salir el popup
-    localStorage.setItem("userEmail", email);
+    localStorage.setItem("emailUsuario", email);
 
     // Ocultamos el popup
     document.getElementById("emailPopup").style.display = "none";
 
     // Enviar el email al backend
-    fetch("https://herramienta-inversion.onrender.com/guardar-email", {  // ⚠️ CAMBIO: Asegurar que usa el puerto 5001
+    fetch("https://herramienta-inversion.onrender.com/guardar-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email })
@@ -1834,100 +1915,7 @@ function guardarEmail() {
     .catch(error => console.error("Error al guardar el email:", error));
 }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const botonContrato = document.querySelector("button[type='submit']");
-        
-        if (botonContrato) {
-            botonContrato.addEventListener("click", function (event) {
-                event.preventDefault(); // ⛔ Evita que se recargue la página
-                generarContrato(); // 📄 Llama a la función para generar el contrato
-            });
-        } else {
-            console.error("❌ No se encontró el botón de generar contrato");
-        }
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-    console.log("📌 DOM completamente cargado");
-
-    // 🟠 BOTÓN "HERRAMIENTAS" → SIEMPRE LLEVA AL DASHBOARD
-    const btnHerramientas = document.querySelector("#menu-lateral h2 a"); // Botón de Herramientas
-    const dashboard = document.getElementById("dashboard-summary"); // Dashboard principal
-    const secciones = document.querySelectorAll("main > section"); // Todas las secciones
-
-    if (btnHerramientas) {
-        btnHerramientas.addEventListener("click", function (event) {
-            event.preventDefault(); // Evita el comportamiento predeterminado
-
-            console.log("🔄 Clic en 'Herramientas': Mostrando Dashboard");
-            secciones.forEach(seccion => seccion.classList.add("hidden")); // Ocultar todas las secciones
-            dashboard.classList.remove("hidden"); // Mostrar Dashboard
-        });
-    } else {
-        console.error("❌ No se encontró el botón de 'Herramientas'.");
-    }
-
-    // 🟠 BOTONES DEL MENÚ LATERAL → ABRIR SECCIONES DIRECTAMENTE
-    const menuLinks = document.querySelectorAll("#menu-lateral a"); // Todos los enlaces del menú lateral
-    menuLinks.forEach(link => {
-        link.addEventListener("click", function (event) {
-            event.preventDefault();
-
-            // Obtener el ID de la sección desde el `href`
-            const sectionId = this.getAttribute("href").substring(1);
-            console.log(`🔄 Clic en menú lateral: Mostrando sección ${sectionId}`);
-
-            if (sectionId) {
-                showSection(sectionId);
-            } else {
-                console.error("❌ No se pudo determinar la sección.");
-            }
-        });
-    });
-
-    // 🟠 BOTONES DEL DASHBOARD → ABRIR SECCIONES
-    const botonesDashboard = document.querySelectorAll(".boton-dashboard");
-    if (botonesDashboard.length > 0) {
-        botonesDashboard.forEach(boton => {
-            boton.addEventListener("click", function (event) {
-                event.preventDefault();
-
-                const target = this.getAttribute("data-target");
-                console.log(`🔄 Clic en Dashboard: Mostrando sección ${target}`);
-
-                if (target) {
-                    showSection(target);
-                } else {
-                    console.error("❌ No se encontró la sección.");
-                }
-            });
-        });
-    } else {
-        console.error("❌ No se encontraron botones en el Dashboard.");
-    }
-
-    // 🟠 MOSTRAR DASHBOARD POR DEFECTO AL CARGAR LA PÁGINA
-    console.log("✅ Mostrando Dashboard por defecto");
-    secciones.forEach(seccion => seccion.classList.add("hidden")); // Ocultar todas
-    dashboard.classList.remove("hidden"); // Mostrar solo el Dashboard
-});
-
-// 📌 FUNCIÓN QUE MUESTRA UNA SECCIÓN Y OCULTA LAS DEMÁS
-function showSection(sectionId) {
-    const sections = document.querySelectorAll("main > section");
-    sections.forEach(section => section.classList.add("hidden")); // Ocultar todas
-
-    const selectedSection = document.getElementById(sectionId);
-    if (selectedSection) {
-        selectedSection.classList.remove("hidden"); // Mostrar la seleccionada
-        console.log(`✅ Sección '${sectionId}' mostrada correctamente`);
-    } else {
-        console.error(`❌ No se encontró la sección con ID: ${sectionId}`);
-    }
-}
-
 </script>
-
     </script>
 </body>
 </html>

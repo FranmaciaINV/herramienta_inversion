@@ -1,270 +1,194 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agentes IA Real Estate</title>
-    <style>
-        /* Estilos generales */
-        body {
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            color: #333;
-            display: flex;
-        }
+<style>
+    /* Estilos generales */
+    body {
+        display: flex;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #000; /* Fondo negro */
+        color: #fff; /* Texto blanco */
+    }
 
-        /* Menú de navegación lateral */
-        nav {
-            width: 250px;
-            background-color: #1e293b;
-            color: #fff;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
+    /* Barra de navegación */
+    nav {
+        width: 250px;
+        background-color: #ff7300; /* Naranja */
+        color: white;
+        height: 100vh;
+        padding: 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+    }
 
-        nav h2 {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            text-align: center;
-            border-bottom: 1px solid #444;
-            padding-bottom: 10px;
-        }
+    nav h2 {
+        text-align: center;
+        margin-bottom: 15px;
+        border-bottom: 1px solid white;
+        padding-bottom: 8px;
+        color: white; /* Mantiene "Herramientas" en blanco */
+    }
 
-        nav a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 18px;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 5px 0;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+    nav a {
+        color: white;
+        text-decoration: none;
+        font-size: 19px; /* Ajuste de tamaño de fuente */
+        display: block;
+        margin: 12px 0; /* Aumenta ligeramente el espacio entre elementos */
+        padding: 5px 10px; /* Espaciado interno */
+        transition: color 0.3s, text-shadow 0.3s, background 0.3s;
+    }
 
-        nav a:hover {
-            background-color: #475569;
-            color: #fff;
-        }
+    nav a:hover {
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        background: rgba(255, 255, 255, 0.2); /* Efecto hover */
+        border-radius: 5px;
+    }
 
-        nav a.active {
-            background-color: #0ea5e9;
-            color: #fff;
-        }
+    /* Área principal */
+    main {
+        flex: 1;
+        padding: 20px;
+        background-color: #222;
+        margin-left: 250px;
+    }
 
-        /* Área principal */
-        main {
-            flex: 1;
-            background-color: #f8fafc;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    h2 {
+        color: #ff7300;
+    }
 
-        h2 {
-            font-size: 24px;
-            color: #0ea5e9;
-            font-weight: bold;
-        }
+    /* Estilos del popup */
+    .popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        display: none; /* Se mostrará con JavaScript */
+    }
 
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .popup-content {
+        background: #222;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        color: white;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0px 0px 10px rgba(255, 115, 0, 0.7);
+    }
 
-        .content-header button {
-            background-color: #0ea5e9;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+    .popup-content h2 {
+        color: #ff7300;
+        margin-bottom: 10px;
+    }
 
-        .content-header button:hover {
-            background-color: #0284c7;
-        }
+    .popup-content input {
+        width: 90%;
+        padding: 12px;
+        margin: 10px auto;
+        display: block;
+        border: 1px solid #ff7300;
+        border-radius: 5px;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+    }
 
-        /* Tarjetas de métricas */
-        .metrics-container {
-            display: flex;
-            gap: 20px;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
+    .popup-content button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        background-color: #ff7300;
+        border: none;
+        color: white;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        .metric-card {
-            flex: 1;
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            min-width: 200px;
-        }
+    .popup-content button:hover {
+        background-color: #ff5200;
+    }
+</style>
 
-        .metric-card h3 {
-            font-size: 18px;
-            color: #475569;
-            margin-bottom: 10px;
-        }
-
-        .metric-card p {
-            font-size: 24px;
-            color: #0ea5e9;
-            font-weight: bold;
-        }
-
-        /* Contenedor de gráficos */
-        .charts-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        canvas {
-            width: 100%;
-            height: 400px;
-        }
-
-        /* Sección de chat */
-        #chat-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        #chat-messages {
-            background-color: #f1f5f9;
-            padding: 15px;
-            border-radius: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            max-width: 80%;
-            word-wrap: break-word;
-        }
-
-        .message.assistant {
-            background-color: #0ea5e9;
-            color: #fff;
-            text-align: left;
-        }
-
-        .message.user {
-            background-color: #475569;
-            color: #fff;
-            text-align: right;
-            margin-left: auto;
-        }
-
-        /* Entrada de texto en el chat */
-        #chat-input {
-            display: flex;
-            gap: 10px;
-        }
-
-        #chat-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #cbd5e1;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        #chat-input button {
-            background-color: #0ea5e9;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        #chat-input button:hover {
-            background-color: #0284c7;
-        }
-
-        /* Animación de parpadeo */
-        @keyframes blink {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0;
-            }
-        }
-
-        #coming-soon {
-            color: #f59e0b;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            animation: blink 1.5s infinite;
-        }
-    </style>
-</head>
 <body>
-    <nav>
-        <h2>Agentes IA</h2>
-        <a href="#" class="active" onclick="showSection('dashboard')">Dashboard</a>
-        <a href="#" onclick="showSection('demografia')">Demografía</a>
-        <a href="#" onclick="showSection('reformas')">Reformas</a>
-        <a href="#" onclick="showSection('rentabilidad')">Rentabilidad</a>
-        <a href="#" onclick="showSection('negociaciones')">Simulador de Negociaciones</a>
-    </nav>
-    <main>
-        <section id="dashboard">
-            <div class="content-header">
-                <h2>Dashboard</h2>
-                <button>Exportar Datos</button>
-            </div>
-            <div class="metrics-container">
-                <div class="metric-card">
-                    <h3>Propiedades Activas</h3>
-                    <p>125</p>
-                </div>
-                <div class="metric-card">
-                    <h3>Rentabilidad Promedio</h3>
-                    <p>8.5%</p>
-                </div>
-                <div class="metric-card">
-                    <h3>Ingresos Totales</h3>
-                    <p>€75,300</p>
-                </div>
-            </div>
-        </section>
-        <section id="negociaciones">
-            <h2>Simulador de Negociaciones</h2>
-            <div id="chat-container">
-                <div id="chat-messages">
-                    <div class="message assistant">
-                        ¡Hola! Soy tu asistente de negociaciones. ¿En qué puedo ayudarte?
-                    </div>
-                </div>
-                <div id="chat-input">
-                    <input type="text" placeholder="Escribe tu mensaje...">
-                    <button>Enviar</button>
-                </div>
-                <p id="coming-soon">Próximamente disponible</p>
-            </div>
-        </section>
-    </main>
+<nav>
+    <h2>Herramientas</h2>
+    <a href="#" onclick="showSection('demografia')">Estudio Demográfico</a>
+    <a href="#" onclick="showSection('reformas')">Agente de Reformas</a>
+    <a href="#" onclick="showSection('calculadora-rentabilidad')">Calculadora de Rentabilidad Inmobiliaria</a>
+    <a href="#" onclick="showSection('broker-hipotecario')">Bancos y Tasadoras Homologadas</a>
+    <a href="#" onclick="showAsistenteHipotecas()">Broker Hipotecario</a>
+    <a href="#" onclick="showSection('servicios')">Compañías de Servicios</a>
+    <a href="#" onclick="showBuscadorCompanias()">Buscador de Compañías</a>
+    <a href="#" onclick="showSection('generador-contratos')">Generador de Contratos</a>
+    <a href="#" onclick="showSection('noticias')">Newsletter Inmobiliaria</a>
+    <a href="#" onclick="showSimuladorNegociaciones()">Simulador de Negociaciones</a>
+    <a href="#" onclick="showBetaSection('Decorador de Interiores', 'Este asistente analiza planos o fotos de tu vivienda y te asesora con ideas de decoración adaptadas a tus gustos y presupuesto. Además, genera imágenes 3D para visualizar cómo quedará tu hogar con las recomendaciones aplicadas.')">
+        Decorador de Interiores
+    </a>
+</nav>
+
+<main>
+    <section id="dashboard-summary">
+        <h2>Resumen Dashboard</h2>
+        <p>Aquí irán los datos de resumen...</p>
+    </section>
+</main>
+
+<!-- Popup de Email -->
+<div id="emailPopup" class="popup">
+    <div class="popup-content">
+        <h2>HERRAMIENTA INVERSIÓN INMOBILIARIA</h2>
+        <p>Introduce tu email para acceder:</p>
+        <input type="email" id="userEmail" placeholder="Tu email aquí...">
+        <button onclick="guardarEmail()">Acceder</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("📌 DOM completamente cargado");
+
+        // Mostrar popup si no hay email guardado
+        const emailGuardado = localStorage.getItem("emailUsuario");
+        if (!emailGuardado) {
+            document.getElementById("emailPopup").style.display = "flex";
+        } else {
+            document.getElementById("emailPopup").style.display = "none";
+        }
+
+        // Mostrar resumen del dashboard por defecto
+        showSection('dashboard-summary');
+    });
+
+    function guardarEmail() {
+        const email = document.getElementById("userEmail").value;
+        if (email) {
+            localStorage.setItem("emailUsuario", email);
+            document.getElementById("emailPopup").style.display = "none";
+        } else {
+            alert("⚠️ Debes introducir un email para continuar.");
+        }
+    }
+
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll("main > section");
+        sections.forEach(section => section.style.display = "none");
+
+        const selectedSection = document.getElementById(sectionId);
+        if (selectedSection) {
+            selectedSection.style.display = "block";
+        }
+    }
+</script>
 </body>
-</html>
