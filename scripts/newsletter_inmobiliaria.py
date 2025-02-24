@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify
 from flask_cors import CORS
 import requests
@@ -6,8 +7,11 @@ import json
 app = Flask(__name__)
 CORS(app)  # Habilitamos CORS
 
-# Configuración de la API
-PERPLEXITY_API_KEY = "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"
+# Cargar clave API desde variables de entorno
+PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY")
+
+if not PERPLEXITY_API_KEY:
+    raise ValueError("❌ ERROR: No se encontró la API Key de Perplexity. Asegúrate de configurarla en Render.")
 
 def obtener_noticias_inmobiliarias():
     url = "https://api.perplexity.ai/chat/completions"
@@ -33,7 +37,6 @@ def obtener_noticias_inmobiliarias():
     }
 
     try:
-        # Hacer la solicitud a la API de Perplexity
         response = requests.post(url, json=payload, headers=headers)
         print(f"Estado de la solicitud: {response.status_code}")
         print(f"Contenido de respuesta (RAW): {response.text}")
@@ -41,29 +44,23 @@ def obtener_noticias_inmobiliarias():
         if response.status_code == 200:
             data = response.json()
             noticias = []
+
             for choice in data.get("choices", []):
                 content = choice.get("message", {}).get("content", "").strip()
-                print(f"Contenido crudo de la noticia antes de limpiar: {content}")
-
-                # Limpieza del contenido para eliminar marcas ````json````
+                
                 if content.startswith("```json"):
                     content = content.replace("```json", "").replace("```", "").strip()
 
-                print(f"Contenido limpio: {content}")
-
                 try:
-                    # Procesar el contenido limpio como JSON
                     noticias_json = json.loads(content)
                     if isinstance(noticias_json, list):
                         noticias.extend(noticias_json)
                 except json.JSONDecodeError as e:
-                    print(f"Error al procesar contenido como JSON válido: {e}")
-                    print(f"Contenido que falló: {content}")
+                    print(f"Error al procesar JSON: {e}\nContenido fallido: {content}")
 
-            print(f"Noticias procesadas correctamente: {noticias}")
-            return noticias[:4]  # Limitar a 4 noticias
+            return noticias[:4]  
         else:
-            print(f"Error en la solicitud: {response.status_code}")
+            print(f"Error en la API: {response.status_code}")
             return []
     except Exception as e:
         print(f"Error al solicitar noticias: {e}")
