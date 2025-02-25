@@ -10,6 +10,7 @@ import agente_contratos
 import os
 import pandas as pd
 import numpy as np
+import requests
 from flask import send_file
 from flask import request
 
@@ -40,7 +41,9 @@ def home():
 
 
 # Ruta donde se guardarán los correos
-EMAILS_FILE = "emails_guardados.txt"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+EMAILS_FILE = os.path.join(BASE_DIR, "scripts", "emails_guardados.txt")
+print(f"📂 Guardando emails en: {EMAILS_FILE}")
 
 @app.route('/guardar-email', methods=["GET", "POST"])
 def guardar_email():
@@ -63,6 +66,16 @@ def guardar_email():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
+
+@app.route('/obtener-emails', methods=["GET"])
+def obtener_emails():
+    try:
+        with open(EMAILS_FILE, "r") as file:
+            emails = file.readlines()
+        return jsonify({"emails": [email.strip() for email in emails]}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 
 # Ruta para consultas demográficas
