@@ -1177,6 +1177,23 @@ function consultarReformas() {
                 return;
             }
 
+            // Validación: los valores deben ser números y mayores o iguales a 0
+    if (isNaN(datos.valorInmueble) || datos.valorInmueble < 0) {
+        resultadosDiv.innerHTML = '<p class="error">El valor del inmueble debe ser un número mayor o igual a 0.</p>';
+        resultadosDiv.classList.remove('hidden');
+        return;
+    }
+    if (isNaN(datos.rentaMensual) || datos.rentaMensual < 0) {
+        resultadosDiv.innerHTML = '<p class="error">La renta mensual debe ser un número mayor o igual a 0.</p>';
+        resultadosDiv.classList.remove('hidden');
+        return;
+    }
+    if (isNaN(datos.gastosMensuales) || datos.gastosMensuales < 0) {
+        resultadosDiv.innerHTML = '<p class="error">Los gastos mensuales deben ser un número mayor o igual a 0.</p>';
+        resultadosDiv.classList.remove('hidden');
+        return;
+    }
+
             resultadosDiv.innerHTML = '<p>Cargando resultados...</p>';
             resultadosDiv.classList.remove('hidden');
 
