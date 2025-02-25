@@ -77,14 +77,7 @@ def obtener_emails():
         return jsonify({"error": str(e)}), 500
 
 
-
-# Ruta para consultas demográficas
-@app.route('/consulta-demografica', methods=["GET", "POST"])
-def consulta_demografica():
-    data = request.json
-    codigo_postal = data.get('codigo_postal')
-
-    # Diccionario con los datos exactos para cada código postal
+# Diccionario con los datos exactos para cada código postal
 DATOS_MUNICIPIOS = {
     "28080": {
         "nombre": "Majadahonda",
@@ -160,7 +153,7 @@ def consulta_demografica():
     data = request.json
     codigo_postal = data.get('codigo_postal')
 
-    if codigo_postal not in DATOS_MUNICIPIOS:
+    if not codigo_postal or codigo_postal not in DATOS_MUNICIPIOS:
         return jsonify({"error": "Datos no disponibles para el código postal proporcionado."}), 404
 
     # Obtener los datos fijos del municipio
@@ -198,10 +191,10 @@ Resumen de los datos para el código postal {codigo_postal} ({nombre_municipio})
     # Datos para gráficos
     graficos = {
         "labels": [
-            "2024",
-            "2024",
-            "2023",
-            "2023"
+            "Población Española 2024",
+            "Población Extranjera 2024",
+            "Población Española 2023",
+            "Población Extranjera 2023"
         ],
         "values": [espanoles_2024, extranjeros_2024, espanoles_2023, extranjeros_2023]
     }
@@ -211,6 +204,10 @@ Resumen de los datos para el código postal {codigo_postal} ({nombre_municipio})
         "respuesta_clara": respuesta_clara,
         "graficos": graficos
     })
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
 
 # Ruta para consultas de reformas
 @app.route("/consulta-reforma", methods=["GET", "POST"])
