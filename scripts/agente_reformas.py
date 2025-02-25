@@ -141,12 +141,13 @@ def consulta_reforma(reformas):
                 detalles_reforma.append({"tipo": tipo, "precios": precios})
 
             # Calcular el precio total
-            precio_medio = MEDIA_NACIONAL.get(tipo, 0)
-            if tipo == "paredes":
-                precio_medio_por_metro = precio_medio / 250
-                precio_total += precio_medio_por_metro * metros
-            else:
-                precio_total += precio_medio * cantidad
+        precio_medio = MEDIA_NACIONAL.get(tipo, 0)
+        if tipo == "paredes":
+            # Cambio: Se usa el precio fijo de 5.5€ por metro cuadrado
+            precio_total += 5.5 * metros
+
+        else:
+            precio_total += precio_medio * cantidad
 
         # Construir la respuesta HTML
         respuesta_html = f"<h3>Precio total de la Reforma: {round(precio_total, 2)}€</h3>"

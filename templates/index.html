@@ -1080,49 +1080,88 @@ function generarGraficoDemografico(canvasId, labels, values) {
 }
 
 
-        function consultarReformas() {
-            const reformas = [];
-            const resultadosDiv = document.getElementById('resultados-reformas');
-    
-            if (document.getElementById('ventanas').checked) {
-                reformas.push({ tipo: 'ventana', cantidad: parseInt(document.getElementById('cantidad-ventanas').value || 0) });
-            }
-            if (document.getElementById('radiadores').checked) {
-                reformas.push({ tipo: 'radiadores', cantidad: parseInt(document.getElementById('cantidad-radiadores').value || 0) });
-            }
-            if (document.getElementById('paredes').checked) {
-                reformas.push({ tipo: 'paredes', metros: parseFloat(document.getElementById('metros-paredes').value || 0) });
-            }
-            if (document.getElementById('puertas').checked) {
-                reformas.push({ tipo: 'puerta', cantidad: parseInt(document.getElementById('cantidad-puertas').value || 0) });
-            }
-    
-            if (reformas.length === 0) {
-                resultadosDiv.innerHTML = '<p class="error">Seleccione al menos una reforma.</p>';
-                resultadosDiv.classList.remove('hidden'); // Asegúrate de que el div sea visible
-                return;
-            }
-    
-            resultadosDiv.innerHTML = '<p>Cargando resultados...</p>';
-            resultadosDiv.classList.remove('hidden'); // Asegúrate de que el div sea visible
-    
-            fetch('https://herramienta-inversion.onrender.com/consulta-reforma', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ reformas })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    resultadosDiv.innerHTML = `<p class="error">${data.error}</p>`;
-                } else {
-                    resultadosDiv.innerHTML = data.respuesta_html;
-                }
-            })
-            .catch(error => {
-                resultadosDiv.innerHTML = `<p class="error">Error al realizar la consulta: ${error.message}</p>`;
-            });
+function consultarReformas() {
+    const reformas = [];
+    const resultadosDiv = document.getElementById('resultados-reformas');
+    let errorMensaje = '';
+
+    // Validar Ventanas
+    if (document.getElementById('ventanas').checked) {
+        const cantidad = parseInt(document.getElementById('cantidad-ventanas').value || 0);
+        if (cantidad > 0) {
+            reformas.push({ tipo: 'ventana', cantidad: cantidad });
+        } else {
+            errorMensaje += '<p class="error">Debe ingresar un número válido para Ventanas.</p>';
         }
+    }
+
+    // Validar Radiadores
+    if (document.getElementById('radiadores').checked) {
+        const cantidad = parseInt(document.getElementById('cantidad-radiadores').value || 0);
+        if (cantidad > 0) {
+            reformas.push({ tipo: 'radiadores', cantidad: cantidad });
+        } else {
+            errorMensaje += '<p class="error">Debe ingresar un número válido para Radiadores.</p>';
+        }
+    }
+
+    // Validar Paredes
+    if (document.getElementById('paredes').checked) {
+        const metros = parseFloat(document.getElementById('metros-paredes').value || 0);
+        if (metros > 0) {
+            reformas.push({ tipo: 'paredes', metros: metros });
+        } else {
+            errorMensaje += '<p class="error">Debe ingresar un número válido para Paredes.</p>';
+        }
+    }
+
+    // Validar Puertas
+    if (document.getElementById('puertas').checked) {
+        const cantidad = parseInt(document.getElementById('cantidad-puertas').value || 0);
+        if (cantidad > 0) {
+            reformas.push({ tipo: 'puerta', cantidad: cantidad });
+        } else {
+            errorMensaje += '<p class="error">Debe ingresar un número válido para Puertas.</p>';
+        }
+    }
+
+    // Si hay errores, mostrar y detener el proceso
+    if (errorMensaje !== '') {
+        resultadosDiv.innerHTML = errorMensaje;
+        resultadosDiv.classList.remove('hidden');
+        return;
+    }
+
+    // Si no hay reformas seleccionadas, mostrar mensaje de error
+    if (reformas.length === 0) {
+        resultadosDiv.innerHTML = '<p class="error">Seleccione al menos una reforma con cantidad válida.</p>';
+        resultadosDiv.classList.remove('hidden');
+        return;
+    }
+
+    // Mostrar mensaje de carga
+    resultadosDiv.innerHTML = '<p>Cargando resultados...</p>';
+    resultadosDiv.classList.remove('hidden');
+
+    // Enviar la solicitud
+    fetch('https://herramienta-inversion.onrender.com/consulta-reforma', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reformas })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            resultadosDiv.innerHTML = `<p class="error">${data.error}</p>`;
+        } else {
+            resultadosDiv.innerHTML = data.respuesta_html;
+        }
+    })
+    .catch(error => {
+        resultadosDiv.innerHTML = `<p class="error">Error al realizar la consulta: ${error.message}</p>`;
+    });
+}
+
     
         function calcularRentabilidad() {
             const resultadosDiv = document.getElementById('resultados-rentabilidad');
