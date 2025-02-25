@@ -845,38 +845,45 @@ button:hover {
     <h2>Generador de Contratos</h2>
     <form id="contrato-form">
         
-        <!-- Selector de tipo de contrato -->
-        <div style="margin-bottom: 20px;">
-            <label for="tipo_contrato" style="color: #fff; font-weight: bold; display: block; margin-bottom: 10px;">
-                Selecciona el tipo de contrato:
-            </label>
-            <select id="tipo_contrato" name="tipo_contrato" required
-                style="width: 100%; padding: 10px; background-color: #333; color: #fff; border-radius: 4px; border: none;">
-                <option value="arras">Contrato de Arras</option>
-                <option value="alquiler" disabled>Contrato de alquiler para vivienda habitual (LAU) - Próximamente</option>
-                <option value="habitaciones_temporada" disabled>Contrato de alquiler de habitaciones por temporada - Próximamente</option>
-                <option value="habitaciones_lau" disabled>Contrato de alquiler de habitaciones para vivienda habitual (LAU) - Próximamente</option>
-                <option value="reserva" disabled>Contrato de reserva de un inmueble - Próximamente</option>
-            </select>
-        </div>
+       <!-- Selector de tipo de contrato -->
+<div style="margin-bottom: 20px; text-align: center;">
+    <label for="tipo_contrato" style="color: #fff; font-weight: bold; display: block; margin-bottom: 10px;">
+        Selecciona el tipo de contrato:
+    </label>
+    <select id="tipo_contrato" name="tipo_contrato" required
+        style="width: 80%; max-width: 400px; padding: 10px; background-color: #fff; color: #000; 
+        border-radius: 4px; border: 1px solid #ccc; display: block; margin: 0 auto;">
+        <option value="arras">Contrato de Arras</option>
+        <option value="alquiler" disabled>Contrato de alquiler para vivienda habitual (LAU) - Próximamente</option>
+        <option value="habitaciones_temporada" disabled>Contrato de alquiler de habitaciones por temporada - Próximamente</option>
+        <option value="habitaciones_lau" disabled>Contrato de alquiler de habitaciones para vivienda habitual (LAU) - Próximamente</option>
+        <option value="reserva" disabled>Contrato de reserva de un inmueble - Próximamente</option>
+    </select>
+</div>
 
-        <!-- Datos del Vendedor -->
-        <div style="margin-bottom: 20px;">
-            <label for="nombre_vendedor" style="color: #fff; font-weight: bold; display: block; margin-bottom: 10px;">
-                Nombre del Vendedor:
-            </label>
-            <input type="text" id="nombre_vendedor" name="nombre_vendedor" placeholder="Introduce el nombre del vendedor" required
-                style="width: 100%; padding: 10px; background-color: #333; color: #fff; border-radius: 4px; border: none;">
-        </div>
+<!-- Datos del Vendedor -->
+<div style="margin-bottom: 20px; text-align: center;">
+    <label for="nombre_vendedor" style="color: #fff; font-weight: bold; display: block; margin-bottom: 10px;">
+        Nombre del Vendedor:
+    </label>
+    <input type="text" id="nombre_vendedor" name="nombre_vendedor" placeholder="Introduce el nombre del vendedor" required
+        style="width: 80%; max-width: 400px; padding: 10px; background-color: #fff; color: #000; 
+        border-radius: 4px; border: 1px solid #ccc; display: block; margin: 0 auto;"
+        oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');">
+</div>
 
-        <!-- Datos del Comprador -->
-        <div style="margin-bottom: 20px;">
-            <label for="nombre_comprador" style="color: #fff; font-weight: bold; display: block; margin-bottom: 10px;">
-                Nombre del Comprador:
-            </label>
-            <input type="text" id="nombre_comprador" name="nombre_comprador" placeholder="Introduce el nombre del comprador" required
-                style="width: 100%; padding: 10px; background-color: #333; color: #fff; border-radius: 4px; border: none;">
-        </div>
+<!-- Datos del Comprador -->
+<div style="margin-bottom: 20px; text-align: center;">
+    <label for="nombre_comprador" style="color: #fff; font-weight: bold; display: block; margin-bottom: 10px;">
+        Nombre del Comprador:
+    </label>
+    <input type="text" id="nombre_comprador" name="nombre_comprador" placeholder="Introduce el nombre del comprador" required
+        style="width: 80%; max-width: 400px; padding: 10px; background-color: #fff; color: #000; 
+        border-radius: 4px; border: 1px solid #ccc; display: block; margin: 0 auto;"
+        oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');">
+</div>
+
+
 
         <!-- Botón para generar y descargar el contrato -->
         <button type="submit" style="width: 100%; padding: 10px 20px; background-color: #ff7300; border: none; border-radius: 4px; color: white; font-size: 16px; cursor: pointer;">
