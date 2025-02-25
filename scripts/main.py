@@ -191,10 +191,10 @@ Resumen de los datos para el código postal {codigo_postal} ({nombre_municipio})
     # Datos para gráficos
     graficos = {
         "labels": [
-            "Población Española 2024",
-            "Población Extranjera 2024",
-            "Población Española 2023",
-            "Población Extranjera 2023"
+            "2024",
+            "2024",
+            "2023",
+            "2023"
         ],
         "values": [espanoles_2024, extranjeros_2024, espanoles_2023, extranjeros_2023]
     }
