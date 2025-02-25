@@ -39,27 +39,43 @@ except Exception as e:
     print(f"Error al cargar {CP_MUNICIPIOS_PATH}: {e}")
     exit()
 
+# Precargar los archivos en memoria para mejorar la consistencia y velocidad
+datos_precargados = {}
+
+for nombre_archivo, ruta_archivo in ARCHIVOS.items():
+    try:
+        df = pd.read_csv(ruta_archivo, dtype=str)
+        df["CODIGO POSTAL"] = df["CODIGO POSTAL"].astype(str).str.zfill(5)  # Asegurar formato de 5 dígitos
+        datos_precargados[nombre_archivo] = df
+        print(f"✅ Datos precargados de {nombre_archivo}.")
+    except Exception as e:
+        print(f"❌ Error al precargar {nombre_archivo}: {e}")
+
 # Función para procesar cada archivo y obtener datos basados en el código postal
 def obtener_datos_por_codigo_postal(codigo_postal):
-    codigo_postal = str(int(float(codigo_postal))).zfill(5)  # Normalizar el código postal a 5 dígitos
-    resultados = []
+    """Obtiene los datos de los diferentes archivos CSV según el código postal."""
+    codigo_postal = str(int(float(codigo_postal))).zfill(5)  # Normaliza a 5 dígitos
+    resultados = {}
 
     for nombre_archivo, ruta_archivo in ARCHIVOS.items():
         try:
             df = pd.read_csv(ruta_archivo, dtype=str)
-            if "MUNICIPIO" in df.columns:
-                # Normalizar la columna MUNICIPIO para buscar coincidencias
-                df["MUNICIPIO"] = df["MUNICIPIO"].apply(
-                    lambda x: str(int(float(x))).zfill(5) if pd.notna(x) and x.replace(".", "").isdigit() else x
-                )
+
+            if "CODIGO POSTAL" in df.columns:
+                df["CODIGO POSTAL"] = df["CODIGO POSTAL"].astype(str).str.zfill(5)  # Asegurar 5 dígitos
+
                 # Filtrar por código postal
-                datos_filtrados = df[df["MUNICIPIO"] == codigo_postal]
+                datos_filtrados = df[df["CODIGO POSTAL"] == codigo_postal]
+
                 if not datos_filtrados.empty:
-                    resultados.append((nombre_archivo, datos_filtrados))
+                    resultados[nombre_archivo] = datos_filtrados
+                else:
+                    print(f"⚠️ No hay datos en {nombre_archivo} para el código {codigo_postal}.")
         except Exception as e:
-            print(f"Error al procesar {nombre_archivo}: {e}")
+            print(f"❌ Error al leer {nombre_archivo}: {e}")
 
     return resultados
+
 
 # Función para limpiar y convertir valores numéricos
 def limpiar_y_convertir(valor):
@@ -155,22 +171,34 @@ def generar_resumen_con_porcentajes(codigo_postal, datos):
 
 # Endpoint para la consulta
 @app.route("/consulta-demografica", methods=["POST"])
-def consulta_demografica(codigo_postal):
+def consulta_demografica():
     try:
+        data = request.get_json()  # Obtener los datos enviados en la solicitud
+        codigo_postal = data.get("codigo_postal")  # Extraer el código postal
+
         if not codigo_postal:
-            return {"error": "Debe proporcionar un código postal."}
+            return jsonify({"error": "Debe proporcionar un código postal."}), 400
 
         # Obtener datos según el código postal
         datos = obtener_datos_por_codigo_postal(codigo_postal)
         if not datos:
-            return {"error": f"No se encontraron datos para el código postal {codigo_postal}."}
+            return jsonify({"error": f"No se encontraron datos para el código postal {codigo_postal}."}), 404
 
         # Generar resumen
         resumen = generar_resumen_con_porcentajes(codigo_postal, datos)
-        return {"respuesta_clara": resumen}
-    except Exception as e:
-        return {"error": f"Error al procesar la consulta: {e}"}
+        return jsonify({"respuesta_clara": resumen}), 200
 
+    except Exception as e:
+        return jsonify({"error": f"Error al procesar la consulta: {e}"}), 500
+
+
+# Desactivar caché en Render
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 # Iniciar la aplicación
 if __name__ == "__main__":
