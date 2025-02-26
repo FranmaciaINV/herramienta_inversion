@@ -192,9 +192,7 @@ Resumen de los datos para el código postal {codigo_postal} ({nombre_municipio})
     graficos = {
         "labels": [
             "2024",
-            "2024",
             "2023",
-            "2023"
         ],
         "values": [espanoles_2024, extranjeros_2024, espanoles_2023, extranjeros_2023]
     }
