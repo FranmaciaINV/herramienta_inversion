@@ -1,5 +1,4 @@
 import requests
-import pd as pd
 from bs4 import BeautifulSoup
 
 # URLs de las reformas
