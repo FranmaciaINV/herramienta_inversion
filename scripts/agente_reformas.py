@@ -99,16 +99,15 @@ def consulta_reforma(reformas):
 
         detalles_html += "</ul>"
 
-        # Incluir la función JavaScript para alternar detalles
+        # 🔹 **Incluir la función JavaScript en el HTML para asegurarnos de que se ejecuta correctamente**
         detalles_html += """
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                var buttons = document.querySelectorAll('.detalle-btn');
-                buttons.forEach(function(button) {
+                document.querySelectorAll('.detalle-btn').forEach(button => {
                     button.addEventListener('click', function() {
                         var targetId = this.getAttribute('data-target');
                         var elem = document.getElementById(targetId);
-                        if (elem.style.display === "none") {
+                        if (elem.style.display === "none" || elem.style.display === "") {
                             elem.style.display = "block";
                         } else {
                             elem.style.display = "none";
