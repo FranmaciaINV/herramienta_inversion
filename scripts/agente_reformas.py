@@ -92,20 +92,15 @@ def consulta_reforma(reformas):
         if not reformas:
             return {"error": "Debe seleccionar al menos una reforma."}
 
-        detalles_reforma = []
         precio_total = 0.0  # Inicializamos el precio total correctamente
+        respuesta_html = f"<h3>Precio total de la Reforma: {round(precio_total, 2)}€</h3>"
+        respuesta_html += "<ul>"
 
         for reforma in reformas:
-            tipo = reforma.get("tipo")
+            tipo = reforma["tipo"]
+            tipo_id = tipo.lower()  # 🔥 Convertir a minúsculas para IDs correctos
             cantidad = reforma.get("cantidad", 0)
             metros = reforma.get("metros", 0)
-
-            # Validar valores
-            try:
-                cantidad = int(cantidad)
-                metros = float(metros)
-            except ValueError:
-                return {"error": f"Cantidad o metros inválidos para la reforma {tipo}"}
 
             # 🔹 **Calcular el precio total correctamente**
             precio_medio = MEDIA_NACIONAL.get(tipo, 0)
@@ -115,23 +110,31 @@ def consulta_reforma(reformas):
             else:
                 precio_total += precio_medio * cantidad  # 🔥 Se suma correctamente para cada elemento
 
-        # 🔹 **Generar correctamente las descripciones de cada reforma**
-        respuesta_html = f"<h3>Precio total de la Reforma: {round(precio_total, 2)}€</h3>"
-        respuesta_html += "<ul>"
-
-        for reforma in reformas:
-            tipo = reforma["tipo"]
             precios_html = DESCRIPCION_DETALLADA.get(tipo, "Sin información disponible.")  # ✅ Obtener la descripción correcta
 
+            # 🔹 **Generar la estructura HTML con ID en minúsculas**
             respuesta_html += (
                 f"<li>{tipo.capitalize()}: "
-                f"<button onclick=\"document.getElementById('{tipo}').style.display = "
-                f"(document.getElementById('{tipo}').style.display === 'none' ? 'block' : 'none')\">"
+                f"<button onclick=\"toggleDetails('{tipo_id}')\">"
                 f"Ver detalles</button>"
-                f"<div id='{tipo}' style='display:none;'>{precios_html}</div></li>"
+                f"<div id='{tipo_id}' style='display:none;'>{precios_html}</div></li>"
             )
 
         respuesta_html += "</ul>"
+
+        # 🔹 **Incluir función JavaScript para alternar la visibilidad**
+        respuesta_html += """
+        <script>
+            function toggleDetails(id) {
+                var elem = document.getElementById(id);
+                if (elem.style.display === "none") {
+                    elem.style.display = "block";
+                } else {
+                    elem.style.display = "none";
+                }
+            }
+        </script>
+        """
 
         return {"respuesta_html": respuesta_html}
 
