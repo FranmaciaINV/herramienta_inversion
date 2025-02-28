@@ -77,21 +77,26 @@ def consulta_reforma(reformas):
             else:
                 precio_total += precio_medio * cantidad  # 🔥 Se suma correctamente para cada elemento
 
-        # Construir la respuesta HTML
+        # 🔹 **Generar correctamente las descripciones de cada reforma**
         respuesta_html = f"<h3>Precio total de la Reforma: {round(precio_total, 2)}€</h3>"
         respuesta_html += "<ul>"
-        for detalle in detalles_reforma:
-            tipo = detalle["tipo"].capitalize()
-            precios_html = "Sin información disponible."
+
+        for detalle in reformas:
+            tipo = detalle["tipo"]
+            precios_html = DESCRIPCION_DETALLADA.get(tipo, "Sin información disponible.")  # ✅ Obtener la descripción correcta
+
             respuesta_html += (
-                f"<li>{tipo}: "
+                f"<li>{tipo.capitalize()}: "
                 f"<button onclick=\"document.getElementById('{tipo}').style.display = "
                 f"(document.getElementById('{tipo}').style.display === 'none' ? 'block' : 'none')\">"
                 f"Ver detalles</button>"
                 f"<div id='{tipo}' style='display:none;'>{precios_html}</div></li>"
             )
+
         respuesta_html += "</ul>"
 
         return {"respuesta_html": respuesta_html}
+
     except Exception as e:
         return {"error": f"Error al procesar la consulta: {str(e)}"}
+
