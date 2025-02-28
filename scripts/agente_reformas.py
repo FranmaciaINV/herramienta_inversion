@@ -135,13 +135,13 @@ def consulta_reforma(reformas):
             tipo_id = f"detalle_{tipo.lower()}"  # 🔹 Generamos un ID único
 
             respuesta_html += (
-                f"<li>{tipo}: {detalle['precio_total']}€<br>"
-                f"<button onclick=\"document.getElementById('{tipo_id}').style.display = "
-                f"(document.getElementById('{tipo_id}').style.display === 'none' ? 'block' : 'none')\">"
-                f"Ver detalles</button>"
-                f"<div id='{tipo_id}' style='display:none; padding: 10px; background: #f3f3f3; border-radius: 5px;'>"
-                f"{precios_html}</div></li>"
-            )
+    f"<li>{tipo}: {detalle['precio_total']}€<br>"
+    f"<button onclick=\"document.getElementById('{tipo_id}').style.display = "
+    f"(document.getElementById('{tipo_id}').style.display === 'none' ? 'block' : 'none')\">"
+    f"Ver detalles</button>"
+    f"<div id='{tipo_id}' style='display:none; padding: 10px; border-radius: 5px; color: #fff;'>"
+    f"{precios_html}</div></li>"
+)
         respuesta_html += "</ul>"
 
         return {"respuesta_html": respuesta_html}
