@@ -1968,6 +1968,25 @@ function guardarEmail() {
     .catch(error => console.error("Error al guardar el email:", error));
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    // Selecciona todos los inputs de cantidad (ventanas, radiadores, paredes, puertas)
+    const inputsNumericos = document.querySelectorAll("input[type='text'], input[type='number']");
+
+    inputsNumericos.forEach(input => {
+        // Evento que bloquea letras al escribir
+        input.addEventListener("keypress", function(event) {
+            if (!/[0-9]/.test(event.key)) {
+                event.preventDefault(); // Bloquea la tecla si no es un número
+            }
+        });
+
+        // Evento que corrige lo que se pega
+        input.addEventListener("input", function() {
+            this.value = this.value.replace(/\D/g, ""); // Elimina caracteres no numéricos
+        });
+    });
+});
+
 </script>
     </script>
 </body>
