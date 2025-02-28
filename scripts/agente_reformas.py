@@ -92,8 +92,8 @@ def consulta_reforma(reformas):
             # Generar el HTML para los detalles de cada reforma
             detalles_html += (
                 f"<li><b>{tipo.capitalize()}</b>: {round(subtotal, 2)} €<br>"
-                f"<button onclick=\"toggleDetails('{tipo_id}')\">Ver detalles</button>"
-                f"<div id='{tipo_id}' style='display:none; padding: 10px; background: #f3f3f3; border-radius: 5px;'>"
+                f"<button class='detalle-btn' data-target='{tipo_id}'>Ver detalles</button>"
+                f"<div id='{tipo_id}' class='detalle-contenido' style='display:none; padding: 10px; background: #f3f3f3; border-radius: 5px;'>"
                 f"{precios_html}</div></li><br>"
             )
 
@@ -102,14 +102,20 @@ def consulta_reforma(reformas):
         # Incluir la función JavaScript para alternar detalles
         detalles_html += """
         <script>
-            function toggleDetails(id) {
-                var elem = document.getElementById(id);
-                if (elem.style.display === "none") {
-                    elem.style.display = "block";
-                } else {
-                    elem.style.display = "none";
-                }
-            }
+            document.addEventListener('DOMContentLoaded', function() {
+                var buttons = document.querySelectorAll('.detalle-btn');
+                buttons.forEach(function(button) {
+                    button.addEventListener('click', function() {
+                        var targetId = this.getAttribute('data-target');
+                        var elem = document.getElementById(targetId);
+                        if (elem.style.display === "none") {
+                            elem.style.display = "block";
+                        } else {
+                            elem.style.display = "none";
+                        }
+                    });
+                });
+            });
         </script>
         """
 
