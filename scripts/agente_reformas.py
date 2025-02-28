@@ -17,72 +17,40 @@ MEDIA_NACIONAL = {
     "puerta": 559
 }
 
-# Texto personalizado de precios por reforma
+# Descripciones detalladas por tipo de reforma
 DESCRIPCION_DETALLADA = {
     "ventana": """
-La instalación de ventanas depende del sistema elegido:
-- Sistema corredero: Precio entre 420 €/m² y 470 €/m².
-- Sistema practicable: Incrementa el costo en aproximadamente 20 €/m².
-- Sistema abatible: Incrementa el costo en aproximadamente 10 €/m².
-- Oscilobatiente: Incrementa el costo en aproximadamente 100 €/m².
-- Oscilo-paralelo: Incrementa el costo en aproximadamente 150 €/m².
-
-Nota: Los precios incluyen instalación estándar.
+    <b>Detalles sobre instalación de ventanas:</b><br>
+    - Sistema corredero: Precio entre 420 €/m² y 470 €/m².<br>
+    - Sistema practicable: Incrementa el costo en aproximadamente 20 €/m².<br>
+    - Sistema abatible: Incrementa el costo en aproximadamente 10 €/m².<br>
+    - Oscilobatiente: Incrementa el costo en aproximadamente 100 €/m².<br>
+    - Oscilo-paralelo: Incrementa el costo en aproximadamente 150 €/m².<br>
+    <i>Nota: Los precios incluyen instalación estándar.</i>
     """,
     "radiadores": """
-La instalación de radiadores puede ser eléctrica o de agua:
-
-1. Radiadores eléctricos:
-   - Instalación básica: No requieren obra, basta con colgarlos y enchufarlos.
-   - Costos adicionales (mano de obra y transporte): 20 € - 30 €.
-   - Costos aproximados:
-     - Convector eléctrico para 10 m²: Desde 20 €.
-     - Acumulador eléctrico: 150 €.
-     - Emisor térmico seco: 100 €, de fluido: 140 €, cerámico: 240 €.
-
-2. Radiadores de agua:
-   - Radiador de acero (panel): Desde 70 €.
-   - Radiador modular: Desde 90 €.
-   - Radiador de hierro fundido: Desde 90 €.
-   - Radiador de aluminio: Desde 129 €.
-
-Nota: Los precios incluyen instalación estándar y están sujetos a variaciones según las dimensiones y el tipo de radiador.
+    <b>Detalles sobre instalación de radiadores:</b><br>
+    - Radiador de acero: Desde 70 €.<br>
+    - Radiador modular: Desde 90 €.<br>
+    - Radiador de hierro fundido: Desde 90 €.<br>
+    - Radiador de aluminio: Desde 129 €.<br>
+    <i>Nota: Los precios incluyen instalación estándar y pueden variar según dimensiones.</i>
     """,
     "paredes": """
-Los precios para pintar paredes dependen del tipo de pintura utilizada:
-
-1. Pintura temple:
-   - Precio base: 5,5 €/m² (a partir de 10 m²).
-   - Metros adicionales: Desde 3,5 €/m².
-   - Ejemplo: Pintar 250 m² (piso de 50 m²): 850 €.
-
-2. Gotelé:
-   - Precio base: Desde 9,5 €/m² (a partir de 10 m²).
-   - Metros adicionales: Desde 6,5 €/m².
-   - Eliminar gotelé: 9 € - 12 €/m².
-   - Ejemplo: Pintar 250 m² con gotelé y pintura plástica: Desde 1.600 €.
-
-3. Pintura plástica lisa:
-   - Precio base: Desde 6,5 €/m² (a partir de 10 m²).
-   - Metros adicionales: Desde 4,6 €/m².
-   - Ejemplo: Pintar 250 m²: 1.150 €.
-
-4. Pintura decorativa:
-   - Precio base: Desde 15 €/m².
-   - Ejemplo: Pintar una pared de 4 x 20 m: 135 €.
-
-5. Pintura antihumedad:
-   - Precio base: Desde 895 € para 250 m².
+    <b>Detalles sobre pintura de paredes:</b><br>
+    - Pintura temple: 5,5 €/m².<br>
+    - Pintura plástica: 6,5 €/m².<br>
+    - Gotelé: 9,5 €/m².<br>
+    - Pintura decorativa: Desde 15 €/m².<br>
+    <i>Nota: Incluye material y mano de obra estándar.</i>
     """,
     "puerta": """
-El costo varía según el tipo de puerta instalada:
-
-1. Puertas de seguridad: Desde 300 €, con instalación e IVA.
-2. Puertas blindadas: Desde 559 €, con instalación e IVA.
-3. Puertas acorazadas: Desde 1.200 €, con instalación e IVA.
-4. Retirar una puerta antigua: Incremento de 50 € - 70 €.
-
-Nota: Los precios pueden variar dependiendo del tamaño, material y estilo de la puerta.
+    <b>Detalles sobre instalación de puertas:</b><br>
+    - Puertas de seguridad: Desde 300 €.<br>
+    - Puertas blindadas: Desde 559 €.<br>
+    - Puertas acorazadas: Desde 1.200 €.<br>
+    - Retirar puerta antigua: Incremento de 50 € - 70 €.<br>
+    <i>Nota: Precios pueden variar según tamaño y material.</i>
     """
 }
 
@@ -93,37 +61,46 @@ def consulta_reforma(reformas):
             return {"error": "Debe seleccionar al menos una reforma."}
 
         precio_total = 0.0  # Inicializamos el precio total correctamente
-        respuesta_html = f"<h3>Precio total de la Reforma: {round(precio_total, 2)}€</h3>"
-        respuesta_html += "<ul>"
+        detalles_html = "<h3>Detalles de la Reforma</h3><ul>"
 
         for reforma in reformas:
-            tipo = reforma["tipo"]
-            tipo_id = tipo.lower()  # 🔥 Convertir a minúsculas para IDs correctos
+            tipo = reforma.get("tipo")
             cantidad = reforma.get("cantidad", 0)
             metros = reforma.get("metros", 0)
 
-            # 🔹 **Calcular el precio total correctamente**
+            # Asegurar que los valores sean numéricos
+            try:
+                cantidad = int(cantidad)
+                metros = float(metros)
+            except ValueError:
+                return {"error": f"Cantidad o metros inválidos para la reforma {tipo}"}
+
+            # Obtener el precio medio
             precio_medio = MEDIA_NACIONAL.get(tipo, 0)
 
+            # Cálculo del precio total por tipo de reforma
             if tipo == "paredes":
-                precio_total += precio_medio * metros  # 🔥 Se suma correctamente
+                subtotal = precio_medio * metros
             else:
-                precio_total += precio_medio * cantidad  # 🔥 Se suma correctamente para cada elemento
+                subtotal = precio_medio * cantidad
 
-            precios_html = DESCRIPCION_DETALLADA.get(tipo, "Sin información disponible.")  # ✅ Obtener la descripción correcta
+            precio_total += subtotal  # Sumamos al total
 
-            # 🔹 **Generar la estructura HTML con ID en minúsculas**
-            respuesta_html += (
-                f"<li>{tipo.capitalize()}: "
-                f"<button onclick=\"toggleDetails('{tipo_id}')\">"
-                f"Ver detalles</button>"
-                f"<div id='{tipo_id}' style='display:none;'>{precios_html}</div></li>"
+            precios_html = DESCRIPCION_DETALLADA.get(tipo, "Sin información disponible.")
+            tipo_id = f"detalles_{tipo}"  # Generamos un ID único
+
+            # Generar el HTML para los detalles de cada reforma
+            detalles_html += (
+                f"<li><b>{tipo.capitalize()}</b>: {round(subtotal, 2)} €<br>"
+                f"<button onclick=\"toggleDetails('{tipo_id}')\">Ver detalles</button>"
+                f"<div id='{tipo_id}' style='display:none; padding: 10px; background: #f3f3f3; border-radius: 5px;'>"
+                f"{precios_html}</div></li><br>"
             )
 
-        respuesta_html += "</ul>"
+        detalles_html += "</ul>"
 
-        # 🔹 **Incluir función JavaScript para alternar la visibilidad**
-        respuesta_html += """
+        # Incluir la función JavaScript para alternar detalles
+        detalles_html += """
         <script>
             function toggleDetails(id) {
                 var elem = document.getElementById(id);
@@ -136,7 +113,9 @@ def consulta_reforma(reformas):
         </script>
         """
 
-        return {"respuesta_html": respuesta_html}
+        return {
+            "respuesta_html": f"<h3>Precio total de la Reforma: {round(precio_total, 2)}€</h3>{detalles_html}"
+        }
 
     except Exception as e:
         return {"error": f"Error al procesar la consulta: {str(e)}"}
